@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -6,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Solana SPL · USDT Instant Checkout</title>
     
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%230F172A'/><path d='M30 35h40l-8 7H22zM22 47h40l8 7H30zM30 59h40l-8 7H22z' fill='%2310B981'/></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23009393'/><text x='50%' y='55%' dominant-baseline='central' text-anchor='middle' font-size='62' font-weight='800' fill='white' font-family='sans-serif'>₮</text></svg>">
 
     <style>
         :root {
@@ -15,9 +14,13 @@
             --brand-primary-hover: #1E293B;
             --sol-teal: #14F195;
             --sol-purple: #9945FF;
-            --fin-emerald: #10B981;
-            --fin-emerald-soft: #ECFDF5;
-            --fin-emerald-border: #A7F3D0;
+            
+            /* Tether 官方规范色彩参数 */
+            --usdt-aqua: #009393;
+            --usdt-aqua-soft: #E6F5F5;
+            --usdt-aqua-border: #92DBD1;
+            --usdt-aqua-hover: #007D7D;
+            
             --gate-blue: #2563EB;
             --gate-blue-hover: #1D4ED8;
             --gate-blue-soft: #EFF6FF;
@@ -31,11 +34,17 @@
             --text-body: #334155;
             --text-caption: #64748B;
             --border-subtle: #E2E8F0;
-            --border-focus: #3B82F6;
+            --border-focus: #009393;
+            
+            /* 精细微圆角参数 */
+            --radius-card: 12px;
+            --radius-btn: 8px;
+            --radius-pill: 999px;
             
             --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
-            --shadow-card: 0 25px 50px -12px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.8);
-            --shadow-promo: 0 20px 40px -12px rgba(37, 99, 235, 0.09), 0 0 0 1px #DBEAFE;
+            --shadow-card: 0 16px 36px -10px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.9);
+            --shadow-promo: 0 16px 36px -12px rgba(37, 99, 235, 0.09), 0 0 0 1px #DBEAFE;
+            --shadow-modal: 0 25px 60px -15px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.08);
             
             --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Segoe UI", Roboto, sans-serif;
             --font-mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
@@ -46,8 +55,8 @@
         body {
             background-color: var(--bg-canvas);
             background-image: 
-                radial-gradient(at 15% 10%, rgba(20, 241, 149, 0.08) 0px, transparent 45%),
-                radial-gradient(at 85% 10%, rgba(153, 69, 255, 0.08) 0px, transparent 45%),
+                radial-gradient(at 15% 10%, rgba(0, 147, 147, 0.08) 0px, transparent 45%),
+                radial-gradient(at 85% 10%, rgba(153, 69, 255, 0.06) 0px, transparent 45%),
                 radial-gradient(at 50% 100%, rgba(37, 99, 235, 0.04) 0px, transparent 60%);
             font-family: var(--font-sans);
             color: var(--text-heading);
@@ -70,8 +79,9 @@
 
         .glass-panel {
             background: var(--surface-card);
-            border-radius: 22px;
+            border-radius: var(--radius-card);
             box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-subtle);
             overflow: hidden;
         }
 
@@ -87,28 +97,26 @@
         .brand-badge { display: flex; align-items: center; gap: 16px; }
         
         .brand-icon {
-            width: 50px; height: 50px; border-radius: 14px;
-            background: radial-gradient(120% 120% at 20% 10%, #1E293B 0%, #090D16 100%);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 8px 18px -4px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(15, 23, 42, 0.08);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #009393;
+            box-shadow: 0 4px 12px rgba(0, 147, 147, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
-            position: relative;
+            user-select: none;
         }
-        .brand-icon::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 14px;
-            background: radial-gradient(circle at 50% 120%, rgba(20, 241, 149, 0.18), transparent 70%);
-            pointer-events: none;
-        }
-        /* 放大 SVG 尺寸到 34px 并强化外发光 */
-        .brand-icon svg { 
-            width: 34px; 
-            height: 34px; 
-            display: block; 
-            filter: drop-shadow(0 2px 7px rgba(20, 241, 149, 0.35)); 
+
+        .brand-icon span {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #FFFFFF;
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1;
+            margin-top: -2px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         .brand-text h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-heading); }
@@ -117,14 +125,14 @@
         .network-pill {
             display: flex; align-items: center; gap: 8px;
             background: #F8FAFC;
-            padding: 7px 15px; border-radius: 999px;
+            padding: 7px 15px; border-radius: var(--radius-pill);
             font-size: 12.5px; font-weight: 600; color: var(--text-body);
             border: 1px solid var(--border-subtle);
         }
         .sol-dot {
             width: 8px; height: 8px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--sol-purple), var(--sol-teal));
-            box-shadow: 0 0 6px rgba(20, 241, 149, 0.6);
+            background: var(--usdt-aqua);
+            box-shadow: 0 0 8px rgba(0, 147, 147, 0.7);
         }
 
         .panel-body { 
@@ -140,14 +148,14 @@
             align-items: center;
             background: #FFFFFF;
             border: 1.5px solid var(--border-subtle);
-            border-radius: 14px;
+            border-radius: var(--radius-btn);
             padding: 4px 6px;
             box-shadow: var(--shadow-sm);
             transition: all 0.2s ease;
         }
         .search-container:focus-within {
             border-color: var(--gate-blue);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
         .search-input {
             flex: 1;
@@ -171,12 +179,12 @@
             font-weight: 600;
             border: none;
             padding: 10px 22px;
-            border-radius: 10px;
+            border-radius: var(--radius-btn);
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             white-space: nowrap;
         }
-        .btn-search:hover { background: var(--gate-blue-hover); transform: translateY(-1px); }
+        .btn-search:hover { background: var(--gate-blue-hover); }
 
         .checkout-loader {
             display: flex; flex-direction: column; align-items: center;
@@ -184,57 +192,119 @@
         }
         .spinner {
             width: 40px; height: 40px; border: 3px solid #E2E8F0;
-            border-top: 3px solid var(--sol-teal); border-radius: 50%;
+            border-top: 3px solid var(--usdt-aqua); border-radius: 50%;
             animation: spin 0.8s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .loader-title { font-size: 15px; font-weight: 600; color: var(--text-heading); }
         .loader-desc { font-size: 13px; color: var(--text-caption); }
 
-        .result-panel-box {
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-container {
             background: #FFFFFF;
+            width: 100%;
+            max-width: 540px;
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-modal);
             border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 22px 24px;
+            position: relative;
+            overflow: hidden;
+            transform: translateY(8px);
+            transition: transform 0.2s ease;
+            max-height: 90vh;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            box-shadow: var(--shadow-sm);
-            position: relative;
         }
-        .result-panel-box::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 24px; right: 24px; height: 3px;
-            background: linear-gradient(90deg, var(--sol-teal), var(--fin-emerald));
-            border-radius: 3px 3px 0 0;
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
         }
-        .result-header {
+
+        .modal-header {
+            padding: 18px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-bottom: 12px;
-            border-bottom: 1px dashed var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+            background: #FAFCFE;
+            position: relative;
         }
-        .result-header-title {
+        .modal-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: var(--usdt-aqua);
+        }
+        .modal-title-group {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 15.5px;
+            gap: 10px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--text-heading);
         }
-        .result-header-title svg { width: 19px; height: 19px; color: var(--fin-emerald); }
+        .modal-title-group svg {
+            width: 20px; height: 20px; color: var(--usdt-aqua);
+        }
+        
+        .btn-modal-close {
+            background: #F1F5F9;
+            border: 1px solid var(--border-subtle);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-caption);
+            font-size: 16px;
+            font-weight: 700;
+            transition: all 0.2s;
+            outline: none;
+        }
+        .btn-modal-close:hover {
+            background: #E2E8F0;
+            color: var(--text-heading);
+        }
+
+        .modal-body {
+            padding: 22px 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
         .result-badge-paid {
-            background: var(--fin-emerald-soft);
-            color: #065F46;
-            border: 1px solid var(--fin-emerald-border);
+            background: var(--usdt-aqua-soft);
+            color: var(--usdt-aqua);
+            border: 1px solid var(--usdt-aqua-border);
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 0.06em;
             padding: 3px 9px;
-            border-radius: 999px;
+            border-radius: var(--radius-pill);
         }
+
         .result-items-list { display: flex; flex-direction: column; gap: 10px; }
         .result-row {
             display: flex;
@@ -243,7 +313,7 @@
             gap: 14px;
             padding: 11px 16px;
             background: var(--surface-subtle);
-            border-radius: 10px;
+            border-radius: var(--radius-btn);
             border: 1px solid #F1F5F9;
         }
         .result-k { color: var(--text-caption); font-weight: 500; font-size: 13.5px; white-space: nowrap; flex-shrink: 0; }
@@ -263,14 +333,14 @@
             word-break: break-all;
             background: #FFFFFF;
             padding: 7px 11px;
-            border-radius: 8px;
+            border-radius: var(--radius-btn);
             border: 1px solid var(--border-subtle);
             cursor: pointer;
             transition: all 0.15s;
             max-width: 100%;
         }
         .result-v-hash:hover {
-            border-color: var(--border-focus);
+            border-color: var(--usdt-aqua);
             background: #F8FAFC;
         }
 
@@ -281,17 +351,18 @@
             font-size: 14px;
             font-weight: 600;
             padding: 13px 18px;
-            border-radius: 12px;
+            border-radius: var(--radius-btn);
             cursor: pointer;
             display: flex; align-items: center; justify-content: center; gap: 8px;
             transition: all 0.2s ease;
+            margin-top: 4px;
         }
-        .btn-copy-all:hover { background: var(--brand-primary-hover); transform: translateY(-1px); }
+        .btn-copy-all:hover { background: var(--brand-primary-hover); }
 
         .order-product-card {
             background: #FFFFFF;
             border: 1px solid var(--border-subtle);
-            border-radius: 12px;
+            border-radius: var(--radius-btn);
             padding: 12px 18px;
             display: flex;
             align-items: center;
@@ -299,14 +370,14 @@
         }
         .order-product-title { font-size: 14px; font-weight: 600; color: var(--text-heading); }
         .order-auto-tag {
-            background: var(--fin-emerald-soft); color: #047857; font-size: 11.5px; font-weight: 600;
-            padding: 3px 9px; border-radius: 6px;
+            background: var(--usdt-aqua-soft); color: var(--usdt-aqua); font-size: 11.5px; font-weight: 600;
+            padding: 3px 9px; border-radius: var(--radius-pill);
         }
 
         .custom-amount-card {
             background: var(--surface-subtle);
             border: 1px solid var(--border-subtle);
-            border-radius: 14px;
+            border-radius: var(--radius-card);
             padding: 18px 20px;
             display: flex;
             flex-direction: column;
@@ -316,63 +387,83 @@
         .custom-input-row { display: flex; gap: 10px; }
         .input-price {
             flex: 1; padding: 11px 14px; font-size: 17px; font-family: var(--font-mono);
-            font-weight: 600; border: 1.5px solid var(--border-subtle); border-radius: 10px;
+            font-weight: 600; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-btn);
             outline: none; background: #FFFFFF; transition: all 0.2s;
         }
-        .input-price:focus { border-color: var(--gate-blue); box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.1); }
+        .input-price:focus { border-color: var(--gate-blue); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
         .btn-confirm-amount {
             border: none; background: var(--brand-primary); color: #FFFFFF; font-size: 13.5px;
-            font-weight: 600; padding: 0 20px; border-radius: 10px; cursor: pointer; transition: all 0.2s;
+            font-weight: 600; padding: 0 20px; border-radius: var(--radius-btn); cursor: pointer; transition: all 0.2s;
         }
         .btn-confirm-amount:hover { background: var(--brand-primary-hover); }
 
+        /* 金额展示区域：Flex居中 + 底部基线对齐 + 大字号 */
         .amount-hero {
-            background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+            background: #FFFFFF;
             border: 1.5px dashed #CBD5E1;
-            border-radius: 16px;
-            padding: 18px 20px;
+            border-radius: var(--radius-card);
+            padding: 24px 20px;
             text-align: center;
             cursor: pointer;
             position: relative;
             transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         .amount-hero:hover {
-            border-color: var(--fin-emerald);
-            background: #F0FDF4;
-            transform: translateY(-1px);
+            border-color: var(--usdt-aqua);
+            background: #FAFCFC;
         }
         .amount-title {
-            font-size: 11.5px;
-            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
             color: var(--text-caption);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 4px;
+            letter-spacing: 0.04em;
+        }
+        .amount-title svg {
+            width: 14px;
+            height: 14px;
+            color: var(--text-caption);
+        }
+        .amount-val-group {
+            display: inline-flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 8px;
+            line-height: 1;
         }
         .amount-number {
-            font-size: 40px;
-            font-weight: 700;
+            font-size: 56px;
+            font-weight: 800;
             font-family: var(--font-mono);
             color: var(--text-heading);
-            letter-spacing: -0.03em;
+            letter-spacing: -0.04em;
+            line-height: 1;
         }
         .amount-tag {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
-            color: #047857;
-            background: var(--fin-emerald-soft);
-            border: 1px solid var(--fin-emerald-border);
-            padding: 3px 9px;
+            font-family: var(--font-sans);
+            color: var(--usdt-aqua);
+            background: var(--usdt-aqua-soft);
+            border: 1px solid var(--usdt-aqua-border);
+            padding: 3px 8px;
             border-radius: 6px;
-            margin-left: 8px;
-            vertical-align: middle;
+            line-height: 1.2;
+            transform: translateY(-4px);
         }
 
         .network-alert {
             background: #FFFBEB;
             border: 1px solid #FDE68A;
             padding: 12px 16px;
-            border-radius: 12px;
+            border-radius: var(--radius-btn);
             font-size: 13px;
             color: #92400E;
             line-height: 1.5;
@@ -382,21 +473,19 @@
         .qr-section {
             display: flex; flex-direction: column; align-items: center; gap: 12px;
             background: #F8FAFC; border: 1px solid var(--border-subtle);
-            padding: 22px 20px; border-radius: 16px;
+            padding: 22px 20px; border-radius: var(--radius-card);
         }
         .qr-box {
-            background: #FFFFFF; padding: 12px; border-radius: 14px;
+            background: #FFFFFF; padding: 12px; border-radius: var(--radius-btn);
             border: 1px solid var(--border-subtle); box-shadow: var(--shadow-sm);
             display: flex; align-items: center; justify-content: center;
-            transition: transform 0.2s;
         }
-        .qr-box:hover { transform: scale(1.02); }
         .qr-box img { width: 175px; height: 175px; display: block; }
         .qr-desc { font-size: 13px; color: var(--text-caption); font-weight: 500; }
 
         .address-box { display: flex; flex-direction: column; gap: 8px; }
         .address-card {
-            background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: 12px;
+            background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-btn);
             padding: 11px 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
             cursor: pointer; transition: all 0.2s;
         }
@@ -407,7 +496,7 @@
         }
         .btn-copy {
             background: var(--surface-subtle); border: 1px solid var(--border-subtle);
-            font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 8px;
+            font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: var(--radius-btn);
             white-space: nowrap; cursor: pointer; color: var(--text-heading);
             transition: all 0.15s;
         }
@@ -415,7 +504,7 @@
 
         .status-sync-box {
             display: flex; align-items: center; justify-content: center; gap: 10px;
-            background: #F1F5F9; border-radius: 12px; padding: 13px;
+            background: #F1F5F9; border-radius: var(--radius-btn); padding: 13px;
             font-size: 13.5px; color: var(--text-caption); font-weight: 600;
         }
         .pulse-dot {
@@ -429,23 +518,15 @@
         @keyframes ping { 75%, 100% { transform: scale(1.8); opacity: 0; } }
 
         .gate-portal-card {
-            background: linear-gradient(180deg, #FFFFFF 0%, #FAFCFF 100%);
+            background: #FFFFFF;
             border: 1px solid #DBEAFE;
-            border-radius: 22px;
+            border-radius: var(--radius-card);
             padding: 30px 32px;
             box-shadow: var(--shadow-promo);
             display: flex;
             flex-direction: column;
             gap: 22px;
             position: relative;
-            overflow: hidden;
-        }
-        .gate-portal-card::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0; width: 180px; height: 180px;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
-            pointer-events: none;
         }
         .gate-portal-header {
             display: flex;
@@ -455,11 +536,11 @@
         }
         .gate-brand-meta { display: flex; align-items: center; gap: 16px; }
         .gate-avatar {
-            width: 50px; height: 50px;
-            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
-            color: #FFFFFF; font-size: 22px; font-weight: 800; border-radius: 14px;
+            width: 48px; height: 48px;
+            background: #2563EB;
+            color: #FFFFFF; font-size: 22px; font-weight: 800; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
         }
         .gate-title-h2 { 
             font-size: 17px; 
@@ -470,9 +551,9 @@
         }
         .gate-sub-benefit { 
             font-size: 13.5px; 
-            color: #047857; 
+            color: var(--usdt-aqua); 
             font-weight: 500; 
-            margin-top: 8px; 
+            margin-top: 6px; 
             line-height: 1.3;
             display: flex; 
             align-items: center; 
@@ -480,7 +561,7 @@
         }
         .gate-auth-tag {
             font-size: 12px; font-weight: 600; color: var(--gate-blue); background: var(--gate-blue-soft);
-            padding: 5px 12px; border-radius: 999px; white-space: nowrap; border: 1px solid #BFDBFE;
+            padding: 5px 12px; border-radius: var(--radius-pill); white-space: nowrap; border: 1px solid #BFDBFE;
         }
         
         .gate-reasons-list { display: flex; flex-direction: column; gap: 12px; }
@@ -490,33 +571,30 @@
             gap: 14px;
             font-size: 13.5px;
             color: var(--text-body);
-            background: #FFFFFF;
+            background: #F8FAFC;
             padding: 14px 18px;
-            border-radius: 14px;
+            border-radius: var(--radius-btn);
             border: 1px solid #E9EFF8;
-            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
         }
         .reason-item span { font-size: 18px; }
         .reason-item strong { color: var(--text-heading); font-weight: 600; }
 
         .gate-cta-btn {
-            background: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%);
+            background: #2563EB;
             color: #FFFFFF;
             text-decoration: none;
             font-size: 14.5px;
             font-weight: 600;
             padding: 15px 24px;
-            border-radius: 14px;
+            border-radius: var(--radius-btn);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28);
+            transition: all 0.2s ease;
         }
         .gate-cta-btn:hover {
-            transform: translateY(-1.5px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+            background: var(--gate-blue-hover);
         }
 
         .gateway-footer {
@@ -534,9 +612,9 @@
         .toast {
             position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-30px);
             background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(8px); color: #FFFFFF;
-            padding: 10px 24px; font-size: 13.5px; font-weight: 500; border-radius: 999px;
+            padding: 10px 24px; font-size: 13.5px; font-weight: 500; border-radius: var(--radius-pill);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); opacity: 0; pointer-events: none;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); z-index: 9999;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); z-index: 99999;
         }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -546,9 +624,11 @@
             body { padding: 20px 14px 40px; }
             .panel-header { padding: 18px 20px; }
             .panel-body { padding: 20px 18px 24px; }
-            .amount-number { font-size: 32px; }
+            .amount-number { font-size: 42px; }
             .gate-portal-card { padding: 22px 20px; }
             .gate-title-h2 { font-size: 15px; }
+            .modal-container { max-height: 85vh; }
+            .modal-body { padding: 18px; }
         }
     </style>
 </head>
@@ -556,24 +636,66 @@
 
     <div id="toast" class="toast"><span id="toast-msg">提示</span></div>
 
+    <!-- 订单查询结果独立模态框 (点击空白处不关闭，必须点击右上角关闭 X) -->
+    <div id="order-result-modal" class="modal-overlay">
+        <div class="modal-container" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <span>订单账单明细</span>
+                </div>
+                <button class="btn-modal-close" id="btn-close-modal" title="关闭窗口" onclick="closeOrderModal()">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="result-items-list">
+                    <div class="result-row">
+                        <span class="result-k">当前状态</span>
+                        <span id="res-status-badge" class="result-badge-paid">PAID</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-k">项目名称</span>
+                        <span class="result-v" id="res-project">--</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-k">订单编号</span>
+                        <span class="result-v mono" id="res-order-id">--</span>
+                    </div>
+                    <div class="result-row" style="align-items: flex-start;">
+                        <span class="result-k" style="margin-top: 6px;">交易哈希</span>
+                        <div class="result-v-hash" id="res-tx-hash" title="点击复制交易哈希" onclick="copyTxHash()">--</div>
+                    </div>
+                    <div class="result-row" id="res-row-amount">
+                        <span class="result-k">支付金额</span>
+                        <span class="result-v mono" id="res-amount">--</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-k">到账时间</span>
+                        <span class="result-v mono" id="res-time">--</span>
+                    </div>
+                    <div class="result-row hidden" id="res-row-url" style="align-items: flex-start;">
+                        <span class="result-k" style="margin-top: 6px;">交付结果</span>
+                        <div class="result-v-hash" id="res-url-text" title="点击复制交付结果" onclick="copyDeliveryResult()">--</div>
+                    </div>
+                </div>
+
+                <button class="btn-copy-all" onclick="copyAllOrderDetails()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <span>一键复制订单数据</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="gateway-wrapper">
         <main class="glass-panel">
             <header class="panel-header">
                 <div class="brand-badge">
-                    <!-- 放大后的饱满 Solana 官方三条杠图标 -->
                     <div class="brand-icon">
-                        <svg viewBox="15 22 70 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                                <linearGradient id="solGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#9945FF" />
-                                    <stop offset="100%" stop-color="#14F195" />
-                                </linearGradient>
-                            </defs>
-                            <!-- 放大并加粗的三条杠路径，紧贴视图边框 -->
-                            <path d="M28 25h56l-11 11H17z" fill="url(#solGrad)"/>
-                            <path d="M17 44.5h56l11 11H28z" fill="url(#solGrad)"/>
-                            <path d="M28 64h56l-11 11H17z" fill="url(#solGrad)"/>
-                        </svg>
+                        <span>₮</span>
                     </div>
                     <div class="brand-text">
                         <h1>USDT 极速收银台</h1>
@@ -598,48 +720,6 @@
                     <div class="loader-desc">正在链上生成专属隔离收款账户</div>
                 </div>
 
-                <div id="result-display-panel" class="result-panel-box hidden">
-                    <div class="result-header">
-                        <div class="result-header-title">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                            <span id="result-title">交易成功明细</span>
-                        </div>
-                        <span id="result-status-badge" class="result-badge-paid">PAID</span>
-                    </div>
-
-                    <div class="result-items-list" id="result-items-list">
-                        <div class="result-row">
-                            <span class="result-k">项目名称</span>
-                            <span class="result-v" id="res-project">--</span>
-                        </div>
-                        <div class="result-row">
-                            <span class="result-k">订单编号</span>
-                            <span class="result-v mono" id="res-order-id">--</span>
-                        </div>
-                        <div class="result-row" style="align-items: flex-start;">
-                            <span class="result-k" style="margin-top: 6px;">交易哈希</span>
-                            <div class="result-v-hash" id="res-tx-hash" title="点击复制交易哈希" onclick="copyTxHash()">--</div>
-                        </div>
-                        <div class="result-row" id="res-row-amount">
-                            <span class="result-k">支付金额</span>
-                            <span class="result-v mono" id="res-amount">--</span>
-                        </div>
-                        <div class="result-row">
-                            <span class="result-k">到账时间</span>
-                            <span class="result-v mono" id="res-time">--</span>
-                        </div>
-                        <div class="result-row hidden" id="res-row-url" style="align-items: flex-start;">
-                            <span class="result-k" style="margin-top: 6px;">交付结果</span>
-                            <div class="result-v-hash" id="res-url-text" title="点击复制交付结果" onclick="copyDeliveryResult()">--</div>
-                        </div>
-                    </div>
-
-                    <button class="btn-copy-all" onclick="copyAllOrderDetails()">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        <span>一键导出订单对账凭据</span>
-                    </button>
-                </div>
-
                 <div id="product-title-wrap" class="order-product-card hidden">
                     <div class="order-product-title" id="product-title-text"></div>
                     <div class="order-auto-tag">实时清算</div>
@@ -654,9 +734,16 @@
                 </div>
 
                 <div id="payment-display-group" class="hidden" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div class="amount-hero" id="amount-display-hero" onclick="copyAmount()">
-                        <div class="amount-title">应结算金额 (点击复制)</div>
-                        <div>
+                    <!-- 重构后的居中大字号基准线对齐模块 -->
+                    <div class="amount-hero" id="amount-display-hero" onclick="copyAmount()" title="点击复制金额">
+                        <div class="amount-title">
+                            <span>应结算金额 (点击复制)</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </div>
+                        <div class="amount-val-group">
                             <span class="amount-number" id="pay-amount">--.--</span>
                             <span class="amount-tag">USDT</span>
                         </div>
@@ -670,7 +757,7 @@
                         <div class="qr-box">
                             <img id="qr-code-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="QR Code" />
                         </div>
-                        <div class="qr-desc">支持 Phantom / OKX Web3 / 币安 扫码即刻划转</div>
+                        <div class="qr-desc">支持 Phantom / OKX Web3 / 币安 扫码转账</div>
                     </div>
 
                     <div class="address-box">
@@ -693,17 +780,17 @@
                 <div class="gate-brand-meta">
                     <div class="gate-avatar">G</div>
                     <div>
-                        <h2 class="gate-title-h2">尚未持有 USDT？通过合规通道快捷兑付</h2>
+                        <h2 class="gate-title-h2">没有 USDT？通过合规通道快捷购买</h2>
                         <div class="gate-sub-benefit">支持微信 / 支付宝直接结算 · 秒级到账</div>
                     </div>
                 </div>
-                <span class="gate-auth-tag">官方合规接入</span>
+                <span class="gate-auth-tag">Gate交易所</span>
             </div>
 
             <div class="gate-reasons-list">
                 <div class="reason-item">
                     <span>⚡</span>
-                    <div><strong>零门槛法币直兑</strong>：无需繁琐外币结算，人民币一键获取 USDT 现货</div>
+                    <div><strong>零门槛法币直兑</strong>：无需繁琐外币结算，人民币一键获取 USDT</div>
                 </div>
                 <div class="reason-item">
                     <span>🔒</span>
@@ -726,7 +813,9 @@
     <script>
         const API_BASE = "https://usdt-target-url.nodecore.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
+        
         const dataToken = urlParams.get('data');
+        const payParam = urlParams.get('pay');
 
         let currentOrderId = "";
         let globalAmount = "";
@@ -792,16 +881,11 @@
             return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
         }
 
-        function printOrderDetails(orderInfo) {
+        function openOrderModal(orderInfo) {
             lastRenderedOrderInfo = orderInfo;
 
-            document.getElementById('payment-display-group').classList.add('hidden');
-            document.getElementById('custom-amount-wrap').classList.add('hidden');
-            document.getElementById('product-title-wrap').classList.add('hidden');
-
-            const badge = document.getElementById('result-status-badge');
-            badge.innerText = orderInfo.status;
-            badge.className = "result-badge-paid";
+            const badge = document.getElementById('res-status-badge');
+            badge.innerText = orderInfo.status || "PAID";
 
             document.getElementById('res-project').innerText = orderInfo.project || currentProject || "自由输入模式订单";
             document.getElementById('res-order-id').innerText = orderInfo.order_id || "--";
@@ -822,8 +906,12 @@
                 urlRow.classList.add('hidden');
             }
 
-            document.getElementById('result-display-panel').classList.remove('hidden');
-            showToast("已获取订单全部明细！");
+            document.getElementById('order-result-modal').classList.add('active');
+            showToast("已调出订单账单明细！");
+        }
+
+        function closeOrderModal() {
+            document.getElementById('order-result-modal').classList.remove('active');
         }
 
         function copyAllOrderDetails() {
@@ -856,7 +944,8 @@ ${o.url ? "交付结果: " + o.url : ""}
                     const data = await res.json();
                     if (data.success && data.paid) {
                         clearInterval(pollTimer);
-                        printOrderDetails(data.order);
+                        document.getElementById('sync-text').innerText = "交易已成功确认到账！";
+                        openOrderModal(data.order);
                     }
                 } catch {}
             }, 3000);
@@ -887,7 +976,7 @@ ${o.url ? "交付结果: " + o.url : ""}
             const qrPayload = `solana:${data.address}?amount=${data.pay_amount}`;
             document.getElementById('qr-code-img').src = `https://qr-code.nodecore.workers.dev/?size=240x240&margin=0&color=0F172A&data=${encodeURIComponent(qrPayload)}`;
 
-            document.getElementById('result-display-panel').classList.add('hidden');
+            document.getElementById('custom-amount-wrap').classList.add('hidden');
             document.getElementById('payment-display-group').classList.remove('hidden');
             document.getElementById('sync-text').innerText = "已生成专属通道，正在监听链上入账...";
 
@@ -903,9 +992,9 @@ ${o.url ? "交付结果: " + o.url : ""}
             }
         }
 
-        async function fetchOrder(url, isFromDataToken = false) {
+        async function fetchOrder(url, isFromDataToken = false, cacheKey = null) {
             const loaderEl = document.getElementById('checkout-loader');
-            if (isFromDataToken) loaderEl.classList.remove('hidden');
+            loaderEl.classList.remove('hidden');
 
             try {
                 const res = await fetch(url);
@@ -915,25 +1004,34 @@ ${o.url ? "交付结果: " + o.url : ""}
                     if (isFromDataToken) {
                         switchToCustomMode(data.msg || "订单密文解析失败");
                     } else {
-                        showToast(data.msg || "获取收款地址失败，请重试");
+                        switchToCustomMode(data.msg || "获取收款信息失败，请手动输入");
                     }
                     return;
                 }
+
+                // 请求成功后存入 sessionStorage
+                if (cacheKey) {
+                    try {
+                        sessionStorage.setItem(cacheKey, JSON.stringify(data));
+                    } catch (e) {
+                        console.warn("写入 sessionStorage 失败", e);
+                    }
+                }
+
                 renderOrder(data, isFromDataToken);
             } catch (e) {
                 if (isFromDataToken) {
                     switchToCustomMode("密文请求异常");
                 } else {
-                    showToast("网络连接异常，请重试");
+                    switchToCustomMode("网络连接异常，请重试");
                 }
             } finally {
-                if (isFromDataToken) loaderEl.classList.add('hidden');
+                loaderEl.classList.add('hidden');
             }
         }
 
         function submitCustomAmount() {
             const inputEl = document.getElementById('input-custom-price');
-            const btnEl = document.getElementById('btn-submit-price');
             const val = parseFloat(inputEl.value);
 
             if (isNaN(val) || val <= 0) {
@@ -942,14 +1040,9 @@ ${o.url ? "交付结果: " + o.url : ""}
                 return;
             }
 
-            btnEl.disabled = true;
-            btnEl.innerText = "生成中...";
-            showToast("正在分配专属收款地址...");
-
-            fetchOrder(`${API_BASE}/?price=${encodeURIComponent(val)}`, false).finally(() => {
-                btnEl.disabled = false;
-                btnEl.innerText = "重新生成";
-            });
+            const newUrl = new URL(window.location.origin + window.location.pathname);
+            newUrl.searchParams.set('pay', val);
+            window.location.href = newUrl.toString();
         }
 
         async function searchOrder() {
@@ -973,8 +1066,7 @@ ${o.url ? "交付结果: " + o.url : ""}
                     return;
                 }
 
-                if (pollTimer) clearInterval(pollTimer);
-                printOrderDetails(data.order);
+                openOrderModal(data.order);
             } catch (err) {
                 showToast("查询请求出错，请检查网络");
             } finally {
@@ -985,7 +1077,40 @@ ${o.url ? "交付结果: " + o.url : ""}
 
         window.addEventListener('DOMContentLoaded', () => {
             if (dataToken) {
-                fetchOrder(`${API_BASE}/?data=${encodeURIComponent(dataToken)}`, true);
+                // 以密文为 key，密文变则 key 变，保证不会串单
+                const cacheKey = `order_cache_${dataToken}`;
+                const cachedDataStr = sessionStorage.getItem(cacheKey);
+
+                if (cachedDataStr) {
+                    try {
+                        const cachedData = JSON.parse(cachedDataStr);
+                        renderOrder(cachedData, true);
+                        return;
+                    } catch (e) {
+                        sessionStorage.removeItem(cacheKey);
+                    }
+                }
+
+                // 首次访问或未命中缓存时请求接口
+                fetchOrder(`${API_BASE}/?data=${encodeURIComponent(dataToken)}`, true, cacheKey);
+            } else if (payParam && !isNaN(parseFloat(payParam)) && parseFloat(payParam) > 0) {
+                const amountVal = parseFloat(payParam);
+                document.getElementById('input-custom-price').value = amountVal;
+
+                const payCacheKey = `pay_cache_${amountVal}`;
+                const cachedPayStr = sessionStorage.getItem(payCacheKey);
+
+                if (cachedPayStr) {
+                    try {
+                        const cachedData = JSON.parse(cachedPayStr);
+                        renderOrder(cachedData, false);
+                        return;
+                    } catch (e) {
+                        sessionStorage.removeItem(payCacheKey);
+                    }
+                }
+
+                fetchOrder(`${API_BASE}/?price=${encodeURIComponent(amountVal)}`, false, payCacheKey);
             } else {
                 switchToCustomMode();
             }
