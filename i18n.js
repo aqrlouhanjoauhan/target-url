@@ -1,9 +1,9 @@
 /**
  * 国际化多语言配置文件及引擎 (i18n)
  * 支持语种：
- *  - zh-CN: 简体中文 (基准语言)
+ *  - zh-CN: 简体中文
  *  - zh-TW: 繁體中文
- *  - en: English
+ *  - en: English (全局默认语言)
  *  - ja: 日本語
  *  - ko: 한국어
  *  - es: Español
@@ -762,14 +762,15 @@ const I18N_RESOURCES = {
     }
 };
 
-let currentLang = "zh-CN";
+let currentLang = "en"; // 全局基准缺省语言设为 English
 
 function t(key) {
     if (I18N_RESOURCES[currentLang] && I18N_RESOURCES[currentLang][key] !== undefined) {
         return I18N_RESOURCES[currentLang][key];
     }
-    if (I18N_RESOURCES["zh-CN"] && I18N_RESOURCES["zh-CN"][key] !== undefined) {
-        return I18N_RESOURCES["zh-CN"][key];
+    // 降级使用英文
+    if (I18N_RESOURCES["en"] && I18N_RESOURCES["en"][key] !== undefined) {
+        return I18N_RESOURCES["en"][key];
     }
     return key;
 }
@@ -778,7 +779,7 @@ function updatePageTexts() {
     document.title = t("page_title");
     document.documentElement.lang = currentLang;
 
-    // 针对阿拉伯语等 RTL 语言适配阅读顺序
+    // 针对阿拉伯语等 RTL 语言适配页面排版方向
     if (currentLang === "ar") {
         document.documentElement.dir = "rtl";
     } else {
@@ -817,22 +818,36 @@ function changeLanguage(lang) {
     updatePageTexts();
 }
 
+/**
+ * 自动适配语言核心逻辑：
+ * 1. 优先遵循用户之前手动在页面上选择的语言缓存 (localStorage)
+ * 2. 其次探测浏览器语言 (navigator.language)，精确匹配或前缀匹配已支持的 12 种主流语言
+ * 3. 若浏览器语言未匹配或不支持，一律默认回退至英文 ("en")
+ */
 function initI18n() {
     const saved = localStorage.getItem("app_lang");
     if (saved && I18N_RESOURCES[saved]) {
         currentLang = saved;
     } else {
-        const browserLang = navigator.language || navigator.userLanguage || "zh-CN";
-        if (I18N_RESOURCES[browserLang]) {
-            currentLang = browserLang;
-        } else if (browserLang.startsWith("zh")) {
-            currentLang = browserLang.includes("TW") || browserLang.includes("HK") ? "zh-TW" : "zh-CN";
+        const rawLang = (navigator.language || (navigator.languages && navigator.languages[0]) || "").toLowerCase();
+        
+        if (I18N_RESOURCES[rawLang]) {
+            currentLang = rawLang;
+        } else if (rawLang.startsWith("zh")) {
+            // 中文区分繁简，TW/HK/MO 匹配 zh-TW，其余匹配 zh-CN
+            if (rawLang.includes("tw") || rawLang.includes("hk") || rawLang.includes("mo") || rawLang.includes("hant")) {
+                currentLang = "zh-TW";
+            } else {
+                currentLang = "zh-CN";
+            }
         } else {
-            const prefix = browserLang.split("-")[0];
+            // 尝试两字母主语言代码匹配（例如 es-MX -> es, fr-CA -> fr, pt-BR -> pt）
+            const prefix = rawLang.split("-")[0];
             if (I18N_RESOURCES[prefix]) {
                 currentLang = prefix;
             } else {
-                currentLang = "zh-CN";
+                // 找不到对应语言，一律回退为英文
+                currentLang = "en";
             }
         }
     }
