@@ -1,20 +1,6 @@
 /**
  * 国际化多语言配置文件及引擎 (i18n)
- * 支持语种：
- *  - zh-CN: 简体中文
- *  - zh-TW: 繁體中文
- *  - en: English (全局默认语言)
- *  - ja: 日本語
- *  - ko: 한국어
- *  - es: Español
- *  - ru: Русский
- *  - ar: العربية
- *  - fr: Français
- *  - pt: Português
- *  - de: Deutsch
- *  - vi: Tiếng Việt
  */
-
 const I18N_RESOURCES = {
     "zh-CN": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -76,7 +62,24 @@ const I18N_RESOURCES = {
         copy_header_none: "无",
         copy_header_amount: "支付金额: ",
         copy_header_time: "支付时间: ",
-        copy_header_delivery: "交付结果: "
+        copy_header_delivery: "交付结果: ",
+        // 后端响应码对应的语言映射
+        ERR_DB_MISSING: "数据库配置缺失",
+        ERR_INVALID_TOKEN: "安全令牌验证失败",
+        ERR_INVALID_AMOUNT: "订单中的金额无效",
+        ERR_PARAM_REQUIRED: "请提供有效参数或指定金额",
+        ERR_ORDER_CREATE_FAILED: "订单生成失败，请重试",
+        ERR_INVALID_JSON: "无效的请求数据格式",
+        ERR_SIGNATURE_FAILED: "签名验证失败",
+        ERR_MISSING_ORDER_ID: "缺少订单编号",
+        ERR_ORDER_NOT_FOUND: "订单不存在",
+        ERR_QUERY_REQUIRED: "请输入要查询的订单号或交易哈希",
+        ERR_ORDER_NOT_PAID: "未查询到已支付成功的订单记录",
+        ERR_SERVER_ERROR: "服务器处理异常",
+        ERR_NOT_FOUND: "请求的接口不存在",
+        TAG_UNNAMED_PROJECT: "未命名项目",
+        TAG_PARSE_ERROR: "项目数据解析失败",
+        TAG_FIXED_ORDER: "固定商品订单"
     },
     "zh-TW": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -138,7 +141,23 @@ const I18N_RESOURCES = {
         copy_header_none: "無",
         copy_header_amount: "支付金額: ",
         copy_header_time: "支付時間: ",
-        copy_header_delivery: "交付結果: "
+        copy_header_delivery: "交付結果: ",
+        ERR_DB_MISSING: "資料庫配置缺失",
+        ERR_INVALID_TOKEN: "安全令牌驗證失敗",
+        ERR_INVALID_AMOUNT: "訂單中的金額無效",
+        ERR_PARAM_REQUIRED: "請提供有效參數或指定金額",
+        ERR_ORDER_CREATE_FAILED: "訂單生成失敗，請重試",
+        ERR_INVALID_JSON: "無效的請求資料格式",
+        ERR_SIGNATURE_FAILED: "簽名驗證失敗",
+        ERR_MISSING_ORDER_ID: "缺少訂單編號",
+        ERR_ORDER_NOT_FOUND: "訂單不存在",
+        ERR_QUERY_REQUIRED: "請輸入要查詢的訂單號或交易哈希",
+        ERR_ORDER_NOT_PAID: "未查詢到已支付成功的訂單記錄",
+        ERR_SERVER_ERROR: "伺服器處理異常",
+        ERR_NOT_FOUND: "請求的介面不存在",
+        TAG_UNNAMED_PROJECT: "未命名項目",
+        TAG_PARSE_ERROR: "項目數據解析失敗",
+        TAG_FIXED_ORDER: "固定商品訂單"
     },
     "en": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -200,7 +219,23 @@ const I18N_RESOURCES = {
         copy_header_none: "None",
         copy_header_amount: "Paid Amount: ",
         copy_header_time: "Payment Time: ",
-        copy_header_delivery: "Delivery Result: "
+        copy_header_delivery: "Delivery Result: ",
+        ERR_DB_MISSING: "Database binding missing",
+        ERR_INVALID_TOKEN: "Security token verification failed",
+        ERR_INVALID_AMOUNT: "Invalid payment amount in order",
+        ERR_PARAM_REQUIRED: "Please provide valid parameters or specify an amount",
+        ERR_ORDER_CREATE_FAILED: "Failed to generate payment order, please retry",
+        ERR_INVALID_JSON: "Invalid request payload format",
+        ERR_SIGNATURE_FAILED: "HMAC signature verification failed",
+        ERR_MISSING_ORDER_ID: "Missing order_id parameter",
+        ERR_ORDER_NOT_FOUND: "Order not found",
+        ERR_QUERY_REQUIRED: "Please enter order ID or transaction hash",
+        ERR_ORDER_NOT_PAID: "No settled bill found for this query",
+        ERR_SERVER_ERROR: "Internal server processing error",
+        ERR_NOT_FOUND: "Requested endpoint not found",
+        TAG_UNNAMED_PROJECT: "Unnamed Project",
+        TAG_PARSE_ERROR: "Project data parsing failed",
+        TAG_FIXED_ORDER: "Fixed Item Order"
     },
     "ja": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -262,7 +297,23 @@ const I18N_RESOURCES = {
         copy_header_none: "なし",
         copy_header_amount: "支払金額: ",
         copy_header_time: "支払時刻: ",
-        copy_header_delivery: "引き渡し結果: "
+        copy_header_delivery: "引き渡し結果: ",
+        ERR_DB_MISSING: "データベース設定が見つかりません",
+        ERR_INVALID_TOKEN: "セキュリティトークンの検証に失敗しました",
+        ERR_INVALID_AMOUNT: "注文金額が無効です",
+        ERR_PARAM_REQUIRED: "有効なパラメータまたは金額を指定してください",
+        ERR_ORDER_CREATE_FAILED: "注文の生成に失敗しました。再試行してください",
+        ERR_INVALID_JSON: "無効なリクエストデータ形式です",
+        ERR_SIGNATURE_FAILED: "署名検証に失敗しました",
+        ERR_MISSING_ORDER_ID: "注文番号が指定されていません",
+        ERR_ORDER_NOT_FOUND: "注文が存在しません",
+        ERR_QUERY_REQUIRED: "注文番号または取引ハッシュを入力してください",
+        ERR_ORDER_NOT_PAID: "支払い完了が確認された注文が見つかりません",
+        ERR_SERVER_ERROR: "サーバー処理エラーが発生しました",
+        ERR_NOT_FOUND: "リクエストされたエンドポイントが存在しません",
+        TAG_UNNAMED_PROJECT: "無名のプロジェクト",
+        TAG_PARSE_ERROR: "プロジェクトデータの解析に失敗しました",
+        TAG_FIXED_ORDER: "固定商品注文"
     },
     "ko": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -324,7 +375,23 @@ const I18N_RESOURCES = {
         copy_header_none: "없음",
         copy_header_amount: "결제 금액: ",
         copy_header_time: "결제 시간: ",
-        copy_header_delivery: "전달 결과: "
+        copy_header_delivery: "전달 결과: ",
+        ERR_DB_MISSING: "데이터베이스 바인딩 누락",
+        ERR_INVALID_TOKEN: "보안 토큰 인증 실패",
+        ERR_INVALID_AMOUNT: "주문 금액이 유효하지 않습니다",
+        ERR_PARAM_REQUIRED: "올바른 매개변수를 제공하거나 금액을 지정하십시오",
+        ERR_ORDER_CREATE_FAILED: "결제 주문 생성 실패, 다시 시도해 주세요",
+        ERR_INVALID_JSON: "유효하지 않은 요청 데이터 형식입니다",
+        ERR_SIGNATURE_FAILED: "서명 확인 실패",
+        ERR_MISSING_ORDER_ID: "주문 번호 누락",
+        ERR_ORDER_NOT_FOUND: "주문이 존재하지 않습니다",
+        ERR_QUERY_REQUIRED: "주문 번호 또는 트랜잭션 해시를 입력하세요",
+        ERR_ORDER_NOT_PAID: "결제 완료된 주문 기록을 찾을 수 없습니다",
+        ERR_SERVER_ERROR: "서버 처리 오류",
+        ERR_NOT_FOUND: "요청한 엔드포인트를 찾을 수 없습니다",
+        TAG_UNNAMED_PROJECT: "이름 없는 프로젝트",
+        TAG_PARSE_ERROR: "프로젝트 데이터 해석 실패",
+        TAG_FIXED_ORDER: "고정 상품 주문"
     },
     "es": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -386,7 +453,23 @@ const I18N_RESOURCES = {
         copy_header_none: "Ninguno",
         copy_header_amount: "Monto pagado: ",
         copy_header_time: "Hora de pago: ",
-        copy_header_delivery: "Resultado de entrega: "
+        copy_header_delivery: "Resultado de entrega: ",
+        ERR_DB_MISSING: "Falta la configuración de la base de datos",
+        ERR_INVALID_TOKEN: "Error en la verificación del token de seguridad",
+        ERR_INVALID_AMOUNT: "Monto inválido en la orden",
+        ERR_PARAM_REQUIRED: "Proporcione parámetros válidos o especifique un monto",
+        ERR_ORDER_CREATE_FAILED: "Error al generar la orden de cobro, reintente",
+        ERR_INVALID_JSON: "Formato de datos de solicitud inválido",
+        ERR_SIGNATURE_FAILED: "Error en la verificación de firma",
+        ERR_MISSING_ORDER_ID: "Falta el identificador de orden",
+        ERR_ORDER_NOT_FOUND: "La orden no existe",
+        ERR_QUERY_REQUIRED: "Ingrese el número de orden o hash de transacción",
+        ERR_ORDER_NOT_PAID: "No se encontró registro de orden pagada",
+        ERR_SERVER_ERROR: "Error interno del servidor",
+        ERR_NOT_FOUND: "El recurso solicitado no existe",
+        TAG_UNNAMED_PROJECT: "Proyecto sin nombre",
+        TAG_PARSE_ERROR: "Error al analizar datos del proyecto",
+        TAG_FIXED_ORDER: "Orden de artículo fijo"
     },
     "ru": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -448,7 +531,23 @@ const I18N_RESOURCES = {
         copy_header_none: "Нет",
         copy_header_amount: "Сумма оплаты: ",
         copy_header_time: "Время оплаты: ",
-        copy_header_delivery: "Результат доставки: "
+        copy_header_delivery: "Результат доставки: ",
+        ERR_DB_MISSING: "Отсутствует привязка к базе данных",
+        ERR_INVALID_TOKEN: "Ошибка проверки токена безопасности",
+        ERR_INVALID_AMOUNT: "Недопустимая сумма в заказе",
+        ERR_PARAM_REQUIRED: "Укажите действительные параметры или сумму",
+        ERR_ORDER_CREATE_FAILED: "Не удалось создать заказ на оплату, повторите попытку",
+        ERR_INVALID_JSON: "Недопустимый формат данных запроса",
+        ERR_SIGNATURE_FAILED: "Ошибка проверки подписи",
+        ERR_MISSING_ORDER_ID: "Отсутствует номер заказа",
+        ERR_ORDER_NOT_FOUND: "Заказ не найден",
+        ERR_QUERY_REQUIRED: "Введите номер заказа или хеш транзакции",
+        ERR_ORDER_NOT_PAID: "Записи об оплаченном заказе не найдено",
+        ERR_SERVER_ERROR: "Внутренняя ошибка сервера",
+        ERR_NOT_FOUND: "Запрашиваемый ресурс не найден",
+        TAG_UNNAMED_PROJECT: "Безымянный проект",
+        TAG_PARSE_ERROR: "Ошибка парсинга данных проекта",
+        TAG_FIXED_ORDER: "Заказ фиксированного товара"
     },
     "ar": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -510,7 +609,23 @@ const I18N_RESOURCES = {
         copy_header_none: "لا يوجد",
         copy_header_amount: "مبلغ الدفع: ",
         copy_header_time: "وقت الدفع: ",
-        copy_header_delivery: "نتيجة التسليم: "
+        copy_header_delivery: "نتيجة التسليم: ",
+        ERR_DB_MISSING: "إعداد قاعدة البيانات مفقود",
+        ERR_INVALID_TOKEN: "فشل التحقق من الرمز الأمني",
+        ERR_INVALID_AMOUNT: "مبلغ غير صالح في تفاصيل الطلب",
+        ERR_PARAM_REQUIRED: "يرجى تقديم معلمات صالحة أو تحديد المبلغ",
+        ERR_ORDER_CREATE_FAILED: "فشل إنشاء طلب الدفع، يرجى إعادة المحاولة",
+        ERR_INVALID_JSON: "صيغة بيانات الطلب غير صالحة",
+        ERR_SIGNATURE_FAILED: "فشل التحقق من التوقيع الأمني",
+        ERR_MISSING_ORDER_ID: "معرف الطلب مفقود",
+        ERR_ORDER_NOT_FOUND: "الطلب غير موجود",
+        ERR_QUERY_REQUIRED: "يرجى إدخال رقم الطلب أو تجزئة المعاملة",
+        ERR_ORDER_NOT_PAID: "لم يتم العثور على سجل طلب مدفوع",
+        ERR_SERVER_ERROR: "خطأ في المعالجة الداخلية للخادم",
+        ERR_NOT_FOUND: "المسار المطلوب غير موجود",
+        TAG_UNNAMED_PROJECT: "مشروع بدون اسم",
+        TAG_PARSE_ERROR: "فشل تحليل بيانات المشروع",
+        TAG_FIXED_ORDER: "طلب منتج محدد"
     },
     "fr": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -572,7 +687,23 @@ const I18N_RESOURCES = {
         copy_header_none: "Aucun",
         copy_header_amount: "Montant payé : ",
         copy_header_time: "Heure de paiement : ",
-        copy_header_delivery: "Résultat de livraison : "
+        copy_header_delivery: "Résultat de livraison : ",
+        ERR_DB_MISSING: "Configuration de base de données manquante",
+        ERR_INVALID_TOKEN: "Échec de la validation du jeton de sécurité",
+        ERR_INVALID_AMOUNT: "Montant invalide dans la commande",
+        ERR_PARAM_REQUIRED: "Veuillez fournir des paramètres valides ou spécifier un montant",
+        ERR_ORDER_CREATE_FAILED: "Échec de création de la commande de paiement",
+        ERR_INVALID_JSON: "Format des données de requête invalide",
+        ERR_SIGNATURE_FAILED: "Échec de la vérification de signature",
+        ERR_MISSING_ORDER_ID: "Identifiant de commande manquant",
+        ERR_ORDER_NOT_FOUND: "La commande n'existe pas",
+        ERR_QUERY_REQUIRED: "Veuillez entrer le numéro de commande ou le hash",
+        ERR_ORDER_NOT_PAID: "Aucun enregistrement de commande payée trouvé",
+        ERR_SERVER_ERROR: "Erreur de traitement du serveur",
+        ERR_NOT_FOUND: "Le point de terminaison demandé n'existe pas",
+        TAG_UNNAMED_PROJECT: "Projet sans nom",
+        TAG_PARSE_ERROR: "Échec de l'analyse des données du projet",
+        TAG_FIXED_ORDER: "Commande d'article fixe"
     },
     "pt": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -634,7 +765,23 @@ const I18N_RESOURCES = {
         copy_header_none: "Nenhum",
         copy_header_amount: "Valor pago: ",
         copy_header_time: "Hora do pagamento: ",
-        copy_header_delivery: "Resultado da entrega: "
+        copy_header_delivery: "Resultado da entrega: ",
+        ERR_DB_MISSING: "Configuração do banco de dados ausente",
+        ERR_INVALID_TOKEN: "Falha na validação do token de segurança",
+        ERR_INVALID_AMOUNT: "Valor inválido no pedido",
+        ERR_PARAM_REQUIRED: "Forneça parâmetros válidos ou especifique o valor",
+        ERR_ORDER_CREATE_FAILED: "Falha ao gerar pedido de pagamento, tente novamente",
+        ERR_INVALID_JSON: "Formato de dados de requisição inválido",
+        ERR_SIGNATURE_FAILED: "Falha na verificação da assinatura",
+        ERR_MISSING_ORDER_ID: "Identificador do pedido ausente",
+        ERR_ORDER_NOT_FOUND: "O pedido não existe",
+        ERR_QUERY_REQUIRED: "Insira o número do pedido ou hash",
+        ERR_ORDER_NOT_PAID: "Nenhum registro de pedido pago foi encontrado",
+        ERR_SERVER_ERROR: "Erro interno no servidor",
+        ERR_NOT_FOUND: "O recurso solicitado não existe",
+        TAG_UNNAMED_PROJECT: "Projeto sem nome",
+        TAG_PARSE_ERROR: "Falha na análise dos dados do projeto",
+        TAG_FIXED_ORDER: "Pedido de item fixo"
     },
     "de": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -696,7 +843,23 @@ const I18N_RESOURCES = {
         copy_header_none: "Keine",
         copy_header_amount: "Zahlungsbetrag: ",
         copy_header_time: "Zahlungszeitpunkt: ",
-        copy_header_delivery: "Lieferergebnis: "
+        copy_header_delivery: "Lieferergebnis: ",
+        ERR_DB_MISSING: "Datenbank-Bindung fehlt",
+        ERR_INVALID_TOKEN: "Sicherheitstoken-Verifizierung fehlgeschlagen",
+        ERR_INVALID_AMOUNT: "Ungültiger Betrag in der Bestellung",
+        ERR_PARAM_REQUIRED: "Bitte gültige Parameter angeben oder Betrag festlegen",
+        ERR_ORDER_CREATE_FAILED: "Zahlungsauftrag konnte nicht erstellt werden",
+        ERR_INVALID_JSON: "Ungültiges Anfrage-Datenformat",
+        ERR_SIGNATURE_FAILED: "Signaturprüfung fehlgeschlagen",
+        ERR_MISSING_ORDER_ID: "Bestell-ID fehlt",
+        ERR_ORDER_NOT_FOUND: "Bestellung nicht gefunden",
+        ERR_QUERY_REQUIRED: "Bitte Bestellnummer oder Transaktions-Hash eingeben",
+        ERR_ORDER_NOT_PAID: "Kein bezahlter Auftrag gefunden",
+        ERR_SERVER_ERROR: "Interner Serverfehler",
+        ERR_NOT_FOUND: "Angeforderter Endpunkt nicht gefunden",
+        TAG_UNNAMED_PROJECT: "Unbenanntes Projekt",
+        TAG_PARSE_ERROR: "Fehler beim Parsen der Projektdaten",
+        TAG_FIXED_ORDER: "Fester Artikelauftrag"
     },
     "vi": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -758,28 +921,57 @@ const I18N_RESOURCES = {
         copy_header_none: "Không có",
         copy_header_amount: "Số tiền thanh toán: ",
         copy_header_time: "Thời gian thanh toán: ",
-        copy_header_delivery: "Kết quả giao hàng: "
+        copy_header_delivery: "Kết quả giao hàng: ",
+        ERR_DB_MISSING: "Thiếu liên kết cơ sở dữ liệu",
+        ERR_INVALID_TOKEN: "Xác minh mã bảo mật thất bại",
+        ERR_INVALID_AMOUNT: "Số tiền trong đơn hàng không hợp lệ",
+        ERR_PARAM_REQUIRED: "Vui lòng cung cấp tham số hợp lệ hoặc chỉ định số tiền",
+        ERR_ORDER_CREATE_FAILED: "Tạo đơn thanh toán thất bại, vui lòng thử lại",
+        ERR_INVALID_JSON: "Định dạng dữ liệu yêu cầu không hợp lệ",
+        ERR_SIGNATURE_FAILED: "Xác minh chữ ký bảo mật thất bại",
+        ERR_MISSING_ORDER_ID: "Thiếu mã đơn hàng",
+        ERR_ORDER_NOT_FOUND: "Đơn hàng không tồn tại",
+        ERR_QUERY_REQUIRED: "Vui lòng nhập mã đơn hàng hoặc mã băm giao dịch",
+        ERR_ORDER_NOT_PAID: "Không tìm thấy hồ sơ đơn hàng đã thanh toán",
+        ERR_SERVER_ERROR: "Lỗi xử lý máy chủ",
+        ERR_NOT_FOUND: "Không tìm thấy cổng yêu cầu",
+        TAG_UNNAMED_PROJECT: "Dự án chưa đặt tên",
+        TAG_PARSE_ERROR: "Phân tích dữ liệu dự án thất bại",
+        TAG_FIXED_ORDER: "Đơn hàng sản phẩm cố định"
     }
 };
 
-let currentLang = "en"; // 全局基准缺省语言设为 English
+let currentLang = "en";
 
 function t(key) {
     if (I18N_RESOURCES[currentLang] && I18N_RESOURCES[currentLang][key] !== undefined) {
         return I18N_RESOURCES[currentLang][key];
     }
-    // 降级使用英文
     if (I18N_RESOURCES["en"] && I18N_RESOURCES["en"][key] !== undefined) {
         return I18N_RESOURCES["en"][key];
     }
     return key;
 }
 
+// 获取错误码或内置标识对应当前语言的翻译
+function getCodeText(code, fallbackKey = "toast_network_error") {
+    if (!code) return t(fallbackKey);
+    return t(code) || t(fallbackKey);
+}
+
+// 解析项目标签国际化
+function localizeProjectName(rawProject) {
+    if (!rawProject || rawProject === "__CUSTOM_MODE_ORDER__") return t("default_project_name");
+    if (rawProject === "__UNNAMED_PROJECT__") return t("TAG_UNNAMED_PROJECT");
+    if (rawProject === "__PARSE_ERROR__") return t("TAG_PARSE_ERROR");
+    if (rawProject === "__FIXED_ORDER__") return t("TAG_FIXED_ORDER");
+    return rawProject;
+}
+
 function updatePageTexts() {
     document.title = t("page_title");
     document.documentElement.lang = currentLang;
 
-    // 针对阿拉伯语等 RTL 语言适配页面排版方向
     if (currentLang === "ar") {
         document.documentElement.dir = "rtl";
     } else {
@@ -818,12 +1010,6 @@ function changeLanguage(lang) {
     updatePageTexts();
 }
 
-/**
- * 自动适配语言核心逻辑：
- * 1. 优先遵循用户之前手动在页面上选择的语言缓存 (localStorage)
- * 2. 其次探测浏览器语言 (navigator.language)，精确匹配或前缀匹配已支持的 12 种主流语言
- * 3. 若浏览器语言未匹配或不支持，一律默认回退至英文 ("en")
- */
 function initI18n() {
     const saved = localStorage.getItem("app_lang");
     if (saved && I18N_RESOURCES[saved]) {
@@ -834,19 +1020,16 @@ function initI18n() {
         if (I18N_RESOURCES[rawLang]) {
             currentLang = rawLang;
         } else if (rawLang.startsWith("zh")) {
-            // 中文区分繁简，TW/HK/MO 匹配 zh-TW，其余匹配 zh-CN
             if (rawLang.includes("tw") || rawLang.includes("hk") || rawLang.includes("mo") || rawLang.includes("hant")) {
                 currentLang = "zh-TW";
             } else {
                 currentLang = "zh-CN";
             }
         } else {
-            // 尝试两字母主语言代码匹配（例如 es-MX -> es, fr-CA -> fr, pt-BR -> pt）
             const prefix = rawLang.split("-")[0];
             if (I18N_RESOURCES[prefix]) {
                 currentLang = prefix;
             } else {
-                // 找不到对应语言，一律回退为英文
                 currentLang = "en";
             }
         }
