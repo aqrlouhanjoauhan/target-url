@@ -997,6 +997,16 @@ function updatePageTexts() {
         });
     });
 
+    // === 新增：安全更新未出结果时的地址占位符，不覆盖真实钱包地址 ===
+    const addrEl = document.getElementById("target-address");
+    if (addrEl) {
+        const currentText = addrEl.innerText.trim();
+        // 只有在未加载完成时（包含省略号或关键词）才更新加载文案
+        if (!currentText || currentText.includes("...") || currentText.includes("加载") || currentText.includes("Loading")) {
+            addrEl.innerText = t("loading_text");
+        }
+    }
+
     const langSelect = document.getElementById("lang-select");
     if (langSelect && langSelect.value !== currentLang) {
         langSelect.value = currentLang;
