@@ -74,7 +74,8 @@ function openOrderModal(orderInfo) {
     const badge = document.getElementById('res-status-badge');
     badge.innerText = orderInfo.status || "PAID";
 
-    document.getElementById('res-project').innerText = orderInfo.project || currentProject || t("default_project_name");
+    const displayProject = localizeProjectName(orderInfo.project || currentProject);
+    document.getElementById('res-project').innerText = displayProject;
     document.getElementById('res-order-id').innerText = orderInfo.order_id || "--";
     document.getElementById('res-tx-hash').innerText = orderInfo.signature || t("default_tx_hash");
 
@@ -105,9 +106,10 @@ function copyAllOrderDetails() {
     if (!lastRenderedOrderInfo) return;
     const o = lastRenderedOrderInfo;
     const displayPrice = o.price || globalAmount || "";
+    const displayProject = localizeProjectName(o.project || currentProject);
     const copyContent = 
 `==========================
-${t("copy_header_project")}${o.project || currentProject || t("default_project_name")}
+${t("copy_header_project")}${displayProject}
 ${t("copy_header_order_id")}${o.order_id || ""}
 ${t("copy_header_status")}${o.status || ""}
 ${t("copy_header_hash")}${o.signature || t("copy_header_none")}
@@ -153,8 +155,8 @@ function renderOrder(data, isFromDataToken = false) {
     document.getElementById('pay-amount').innerText = data.pay_amount;
     document.getElementById('target-address').innerText = data.address;
 
-    if (isFromDataToken && data.project) {
-        document.getElementById('product-title-text').innerText = data.project;
+    if (isFromDataToken && data.project && data.project !== "__CUSTOM_MODE_ORDER__") {
+        document.getElementById('product-title-text').innerText = localizeProjectName(data.project);
         document.getElementById('product-title-wrap').classList.remove('hidden');
     } else {
         document.getElementById('product-title-wrap').classList.add('hidden');
@@ -188,29 +190,26 @@ async function fetchOrder(url, isFromDataToken = false, cacheKey = null) {
         const data = await res.json();
 
         if (!res.ok || !data.success) {
-            if (isFromDataToken) {
-                switchToCustomMode(data.msg || t("toast_decrypt_failed"));
-            } else {
-                switchToCustomMode(data.msg || t("toast_get_pay_info_failed"));
-            }
+            // 根据后端响应码转换成本地化文字
+            const tipText = getCodeText(
+                data.code, 
+                isFromDataToken ? "toast_decrypt_failed" : "toast_get_pay_info_failed"
+            );
+            switchToCustomMode(tipText);
             return;
         }
 
         if (cacheKey) {
             try {
                 sessionStorage.setItem(cacheKey, JSON.stringify(data));
-            } catch (e) {
-                console.warn("写入 sessionStorage 失败", e);
-            }
+            } catch (e) {}
         }
 
         renderOrder(data, isFromDataToken);
     } catch (e) {
-        if (isFromDataToken) {
-            switchToCustomMode(t("toast_ciphertext_req_error"));
-        } else {
-            switchToCustomMode(t("toast_network_error"));
-        }
+        switchToCustomMode(
+            t(isFromDataToken ? "toast_ciphertext_req_error" : "toast_network_error")
+        );
     } finally {
         loaderEl.classList.add('hidden');
     }
@@ -248,7 +247,7 @@ async function searchOrder() {
         const data = await res.json();
 
         if (!res.ok || !data.success) {
-            showToast(data.msg || t("toast_order_not_found"));
+            showToast(getCodeText(data.code, "toast_order_not_found"));
             return;
         }
 
