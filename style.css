@@ -141,6 +141,7 @@ a.brand-badge:active {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .network-pill {
@@ -149,16 +150,19 @@ a.brand-badge:active {
     padding: 7px 15px; border-radius: var(--radius-pill);
     font-size: 12.5px; font-weight: 600; color: var(--text-body);
     border: 1px solid var(--border-subtle);
+    flex-shrink: 0;
 }
 .sol-dot {
     width: 8px; height: 8px; border-radius: 50%;
     background: var(--usdt-aqua);
     box-shadow: 0 0 8px rgba(0, 147, 147, 0.7);
+    flex-shrink: 0;
 }
 
 .lang-selector-box {
     display: flex;
     align-items: center;
+    flex-shrink: 0;
 }
 .lang-select {
     appearance: none;
@@ -203,6 +207,7 @@ a.brand-badge:active {
 }
 .search-input {
     flex: 1;
+    min-width: 0;
     padding: 11px 14px;
     font-size: 14px;
     font-family: var(--font-mono);
@@ -227,6 +232,7 @@ a.brand-badge:active {
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     white-space: nowrap;
+    flex-shrink: 0;
 }
 .btn-search:hover { background: var(--gate-blue-hover); }
 
@@ -430,7 +436,7 @@ a.brand-badge:active {
 .custom-input-label { font-size: 13.5px; font-weight: 600; color: var(--text-body); }
 .custom-input-row { display: flex; gap: 10px; }
 .input-price {
-    flex: 1; padding: 11px 14px; font-size: 17px; font-family: var(--font-mono);
+    flex: 1; min-width: 0; padding: 11px 14px; font-size: 17px; font-family: var(--font-mono);
     font-weight: 600; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-btn);
     outline: none; background: #FFFFFF; transition: all 0.2s;
 }
@@ -438,6 +444,7 @@ a.brand-badge:active {
 .btn-confirm-amount {
     border: none; background: var(--brand-primary); color: #FFFFFF; font-size: 13.5px;
     font-weight: 600; padding: 0 20px; border-radius: var(--radius-btn); cursor: pointer; transition: all 0.2s;
+    white-space: nowrap; flex-shrink: 0;
 }
 .btn-confirm-amount:hover { background: var(--brand-primary-hover); }
 
@@ -511,7 +518,8 @@ a.brand-badge:active {
     font-size: 13px;
     color: #92400E;
     line-height: 1.5;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.2px;
+    word-break: break-word;
 }
 
 .qr-section {
@@ -524,8 +532,8 @@ a.brand-badge:active {
     border: 1px solid var(--border-subtle); box-shadow: var(--shadow-sm);
     display: flex; align-items: center; justify-content: center;
 }
-.qr-box img { width: 175px; height: 175px; display: block; }
-.qr-desc { font-size: 13px; color: var(--text-caption); font-weight: 500; }
+.qr-box img { width: 175px; height: 175px; display: block; max-width: 100%; height: auto; }
+.qr-desc { font-size: 13px; color: var(--text-caption); font-weight: 500; text-align: center; }
 
 .address-box { display: flex; flex-direction: column; gap: 8px; }
 .address-card {
@@ -537,27 +545,58 @@ a.brand-badge:active {
 .address-text {
     font-family: var(--font-mono); font-size: 12.5px; word-break: break-all;
     font-weight: 500; line-height: 1.4; color: var(--text-body);
+    min-width: 0;
 }
 .btn-copy {
     background: var(--surface-subtle); border: 1px solid var(--border-subtle);
     font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: var(--radius-btn);
     white-space: nowrap; cursor: pointer; color: var(--text-heading);
     transition: all 0.15s;
+    flex-shrink: 0;
 }
 .btn-copy:hover { background: #FFFFFF; border-color: #CBD5E1; }
 
+/* 状态同步模块：防挤扁、多行自然对齐 */
 .status-sync-box {
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    background: #F1F5F9; border-radius: var(--radius-btn); padding: 13px;
-    font-size: 13.5px; color: var(--text-caption); font-weight: 600;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 12px;
+    background: #F1F5F9;
+    border-radius: var(--radius-btn);
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-caption);
+    font-weight: 500;
 }
+
+#sync-text {
+    flex: 1;
+    word-break: break-word;
+}
+
 .pulse-dot {
     position: relative;
-    width: 8px; height: 8px; border-radius: 50%; background: var(--gate-blue);
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
+    min-height: 8px;
+    flex-shrink: 0;
+    margin-top: 6px;
+    border-radius: 50%;
+    background: var(--gate-blue);
 }
 .pulse-dot::after {
-    content: ''; position: absolute; top: -3px; left: -3px; width: 14px; height: 14px;
-    border-radius: 50%; background: rgba(37, 99, 235, 0.35); animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.35);
+    animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 @keyframes ping { 75%, 100% { transform: scale(1.8); opacity: 0; } }
 
@@ -584,12 +623,97 @@ a.brand-badge:active {
 
 .hidden { display: none !important; }
 
+/* 移动端与极限窄屏自适应响应式规则 */
 @media (max-width: 640px) {
-    body { padding: 20px 14px 40px; }
-    .panel-header { padding: 18px 20px; flex-direction: column; align-items: flex-start; gap: 14px; }
-    .header-right-actions { width: 100%; justify-content: space-between; }
-    .panel-body { padding: 20px 18px 24px; }
-    .amount-number { font-size: 42px; }
-    .modal-container { max-height: 85vh; }
-    .modal-body { padding: 18px; }
+    body {
+        padding: 16px 12px 36px;
+    }
+
+    .gateway-wrapper {
+        gap: 20px;
+    }
+
+    .panel-header {
+        padding: 16px 18px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .header-right-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .panel-body {
+        padding: 18px 16px 22px;
+        gap: 15px;
+    }
+
+    /* 搜索栏：窄屏自适应换行，避免文字溢出按钮重合 */
+    .search-container {
+        flex-wrap: wrap;
+        padding: 4px;
+        gap: 6px;
+    }
+
+    .search-input {
+        min-width: 100%;
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .btn-search {
+        width: 100%;
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    .amount-hero {
+        padding: 20px 14px;
+    }
+
+    .amount-number {
+        font-size: 42px;
+    }
+
+    /* 地址卡片：窄屏下自动换行排列复制按钮 */
+    .address-card {
+        flex-wrap: wrap;
+        padding: 11px 13px;
+        gap: 8px;
+    }
+
+    .address-text {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .btn-copy {
+        margin-left: auto;
+        padding: 6px 14px;
+    }
+
+    /* 自定义金额输入卡片响应式 */
+    .custom-input-row {
+        flex-direction: column;
+    }
+
+    .btn-confirm-amount {
+        padding: 11px 0;
+        width: 100%;
+    }
+
+    /* 弹窗适配 */
+    .modal-container {
+        max-height: 85vh;
+    }
+
+    .modal-body {
+        padding: 16px;
+    }
+
+    .result-row {
+        padding: 9px 12px;
+    }
 }
