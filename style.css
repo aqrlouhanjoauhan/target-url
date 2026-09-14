@@ -167,7 +167,7 @@ a.brand-badge:active {
 .lang-select {
     appearance: none;
     -webkit-appearance: none;
-    background: #F8FAFC url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748B' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") no-repeat right 10px center;
+    background: #F8FAFC url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748B' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1-0 0 1-1.506 0z'/%3E%3C/svg%3E") no-repeat right 10px center;
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-pill);
     padding: 6px 28px 6px 12px;
@@ -556,26 +556,39 @@ a.brand-badge:active {
 }
 .btn-copy:hover { background: #FFFFFF; border-color: #CBD5E1; }
 
-/* 状态同步模块：防挤扁、多行自然对齐 */
+/* 状态同步模块：整体水平+垂直居中 */
 .status-sync-box {
     display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     background: #F1F5F9;
     border-radius: var(--radius-btn);
-    padding: 12px 14px;
-    font-size: 13px;
-    line-height: 1.5;
+    padding: 12px 16px;
+    font-size: 13.5px;
+    line-height: 1.45;
     color: var(--text-caption);
-    font-weight: 500;
+    font-weight: 600;
+    text-align: center;
 }
 
 #sync-text {
-    flex: 1;
     word-break: break-word;
 }
 
+/* 小圆点的独立占位容器：强制固定空间，内部绝对居中，防挤压 */
+.pulse-dot-wrap {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    min-height: 18px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 核心蓝点与微动效扩散波纹 */
 .pulse-dot {
     position: relative;
     width: 8px;
@@ -583,7 +596,6 @@ a.brand-badge:active {
     min-width: 8px;
     min-height: 8px;
     flex-shrink: 0;
-    margin-top: 6px;
     border-radius: 50%;
     background: var(--gate-blue);
 }
