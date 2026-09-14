@@ -622,18 +622,18 @@ a.brand-badge:active {
 
 .btn-copy:hover { background: #FFFFFF; border-color: #CBD5E1; }
 
-/* 状态同步模块：无论单行多行均居中且小球垂直居中对齐 */
+/* 状态同步模块：【小球 + 文字】当作整体居中对齐 */
 .status-sync-box {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    align-items: center;      /* 整体垂直居中 */
+    justify-content: center; /* 整个【小球+文字】在卡片中绝对水平居中 */
     background: #F1F5F9;
     border-radius: var(--radius-btn);
     padding: 12px 18px;
+    gap: 8px;                 /* 小球与文字紧密相挨（8px） */
 }
 
-/* 小球占位区：固定尺寸，禁止 flex 挤压 */
+/* 小球占位区：固定尺寸，保证垂直绝对对齐文本中间 */
 .pulse-dot-wrap {
     display: flex;
     align-items: center;
@@ -643,6 +643,7 @@ a.brand-badge:active {
     min-width: 16px;
     min-height: 16px;
     flex-shrink: 0;
+    align-self: center;       /* 强制在单行/多行文本高度上绝对垂直居中 */
 }
 
 .pulse-dot {
@@ -672,14 +673,16 @@ a.brand-badge:active {
     75%, 100% { transform: scale(1.8); opacity: 0; } 
 }
 
-/* 文字块：根据内容宽度自适应包裹，保持与小球紧凑相贴并居中 */
+/* 文字块：紧凑包裹自身实际宽度，紧挨小球，不撑开多余空白 */
 #sync-text {
     flex: 0 1 auto;
+    width: fit-content;       /* 核心：宽度只按文字实际尺寸包裹，不抢占多余空白 */
+    max-width: calc(100% - 24px);
     font-size: 13.5px;
-    line-height: 1.5;
+    line-height: 1.45;
     color: var(--text-caption);
     font-weight: 600;
-    text-align: center;
+    text-align: left;         /* 紧贴小球，整体位置由外层弹性盒水平居中 */
     word-break: normal;
     overflow-wrap: break-word;
 }
