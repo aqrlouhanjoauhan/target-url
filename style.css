@@ -672,14 +672,14 @@ a.brand-badge:active {
     75%, 100% { transform: scale(1.8); opacity: 0; } 
 }
 
-/* 文字块：根据内容宽度自适应包裹，保持与小球紧凑相贴 */
+/* 文字块：根据内容宽度自适应包裹，保持与小球紧凑相贴并居中 */
 #sync-text {
     flex: 0 1 auto;
     font-size: 13.5px;
     line-height: 1.5;
     color: var(--text-caption);
     font-weight: 600;
-    text-align: left;
+    text-align: center;
     word-break: normal;
     overflow-wrap: break-word;
 }
