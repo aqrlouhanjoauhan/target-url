@@ -79,7 +79,7 @@ const I18N_RESOURCES = {
         ERR_NOT_FOUND: "请求的接口不存在",
         TAG_UNNAMED_PROJECT: "未命名项目",
         TAG_PARSE_ERROR: "项目数据解析失败",
-        TAG_FIXED_ORDER: "实时结算订单"
+        TAG_FIXED_ORDER: "标准结算订单"
     },
     "zh-TW": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -157,7 +157,7 @@ const I18N_RESOURCES = {
         ERR_NOT_FOUND: "請求的介面不存在",
         TAG_UNNAMED_PROJECT: "未命名項目",
         TAG_PARSE_ERROR: "項目數據解析失敗",
-        TAG_FIXED_ORDER: "即時結算訂單"
+        TAG_FIXED_ORDER: "標準結算訂單"
     },
     "en": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -235,7 +235,7 @@ const I18N_RESOURCES = {
         ERR_NOT_FOUND: "Requested endpoint not found",
         TAG_UNNAMED_PROJECT: "Unnamed Project",
         TAG_PARSE_ERROR: "Project data parsing failed",
-        TAG_FIXED_ORDER: "Instant Settlement Order"
+        TAG_FIXED_ORDER: "Standard Order"
     },
     "ja": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -313,7 +313,7 @@ const I18N_RESOURCES = {
         ERR_NOT_FOUND: "リクエストされたエンドポイントが存在しません",
         TAG_UNNAMED_PROJECT: "無名のプロジェクト",
         TAG_PARSE_ERROR: "プロジェクトデータの解析に失敗しました",
-        TAG_FIXED_ORDER: "即時決済注文"
+        TAG_FIXED_ORDER: "標準決済注文"
     },
     "ko": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -391,7 +391,7 @@ const I18N_RESOURCES = {
         ERR_NOT_FOUND: "요청한 엔드포인트를 찾을 수 없습니다",
         TAG_UNNAMED_PROJECT: "이름 없는 프로젝트",
         TAG_PARSE_ERROR: "프로젝트 데이터 해석 실패",
-        TAG_FIXED_ORDER: "실시간 정산 주문"
+        TAG_FIXED_ORDER: "표준 정산 주문"
     },
     "es": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -469,7 +469,7 @@ const I18N_RESOURCES = {
         ERR_NOT_FOUND: "El recurso solicitado no existe",
         TAG_UNNAMED_PROJECT: "Proyecto sin nombre",
         TAG_PARSE_ERROR: "Error al analizar datos del proyecto",
-        TAG_FIXED_ORDER: "Orden de liquidación instantánea"
+        TAG_FIXED_ORDER: "Orden estándar"
     },
     "ru": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -547,7 +547,7 @@ const I18N_RESOURCES = {
         ERR_NOT_FOUND: "Запрашиваемый ресурс не найден",
         TAG_UNNAMED_PROJECT: "Безымянный проект",
         TAG_PARSE_ERROR: "Ошибка парсинга данных проекта",
-        TAG_FIXED_ORDER: "Заказ с мгновенным расчетом"
+        TAG_FIXED_ORDER: "Стандартный заказ"
     },
     "ar": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -625,7 +625,7 @@ const I18N_RESOURCES = {
         ERR_NOT_FOUND: "المسار المطلوب غير موجود",
         TAG_UNNAMED_PROJECT: "مشروع بدون اسم",
         TAG_PARSE_ERROR: "فشل تحليل بيانات المشروع",
-        TAG_FIXED_ORDER: "طلب تسوية فورية"
+        TAG_FIXED_ORDER: "طلب تسوية قياسي"
     },
     "fr": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -703,7 +703,7 @@ const I18N_RESOURCES = {
         ERR_NOT_FOUND: "Le point de terminaison demandé n'existe pas",
         TAG_UNNAMED_PROJECT: "Projet sans nom",
         TAG_PARSE_ERROR: "Échec de l'analyse des données du projet",
-        TAG_FIXED_ORDER: "Commande de règlement instantané"
+        TAG_FIXED_ORDER: "Commande standard"
     },
     "pt": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -781,7 +781,7 @@ const I18N_RESOURCES = {
         ERR_NOT_FOUND: "O recurso solicitado não existe",
         TAG_UNNAMED_PROJECT: "Projeto sem nome",
         TAG_PARSE_ERROR: "Falha na análise dos dados do projeto",
-        TAG_FIXED_ORDER: "Pedido de liquidação instantânea"
+        TAG_FIXED_ORDER: "Pedido padrão"
     },
     "de": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -859,7 +859,7 @@ const I18N_RESOURCES = {
         ERR_NOT_FOUND: "Angeforderter Endpunkt nicht gefunden",
         TAG_UNNAMED_PROJECT: "Unbenanntes Projekt",
         TAG_PARSE_ERROR: "Fehler beim Parsen der Projektdaten",
-        TAG_FIXED_ORDER: "Echtzeit-Abrechnungsauftrag"
+        TAG_FIXED_ORDER: "Standard-Auftrag"
     },
     "vi": {
         page_title: "Solana SPL · USDT Instant Checkout",
@@ -937,7 +937,7 @@ const I18N_RESOURCES = {
         ERR_NOT_FOUND: "Không tìm thấy cổng yêu cầu",
         TAG_UNNAMED_PROJECT: "Dự án chưa đặt tên",
         TAG_PARSE_ERROR: "Phân tích dữ liệu dự án thất bại",
-        TAG_FIXED_ORDER: "Đơn hàng thanh toán tức thì"
+        TAG_FIXED_ORDER: "Đơn hàng thanh toán tiêu chuẩn"
     }
 };
 
@@ -953,13 +953,11 @@ function t(key) {
     return key;
 }
 
-// 获取错误码或内置标识对应当前语言的翻译
 function getCodeText(code, fallbackKey = "toast_network_error") {
     if (!code) return t(fallbackKey);
     return t(code) || t(fallbackKey);
 }
 
-// 解析项目标签国际化
 function localizeProjectName(rawProject) {
     if (!rawProject || rawProject === "__CUSTOM_MODE_ORDER__") return t("default_project_name");
     if (rawProject === "__UNNAMED_PROJECT__") return t("TAG_UNNAMED_PROJECT");
@@ -997,7 +995,6 @@ function updatePageTexts() {
         });
     });
 
-    // === 安全更新未出结果时的地址占位符，不覆盖真实钱包地址 ===
     const addrEl = document.getElementById("target-address");
     if (addrEl) {
         const currentText = addrEl.innerText.trim();
@@ -1006,7 +1003,6 @@ function updatePageTexts() {
         }
     }
 
-    // === 动态刷新商品标题名称（如果存在且是内置标识） ===
     const productTitleEl = document.getElementById("product-title-text");
     if (productTitleEl) {
         const rawCode = productTitleEl.getAttribute("data-raw-project");
