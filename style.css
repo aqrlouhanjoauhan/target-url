@@ -622,7 +622,7 @@ a.brand-badge:active {
 
 .btn-copy:hover { background: #FFFFFF; border-color: #CBD5E1; }
 
-/* 状态同步模块：4 块弹性布局（左垫片20% + 小球 + 紧贴文字 + 右垫片20%） */
+/* 状态同步模块：4 块弹性布局（左垫片15% + 小球 + 紧贴文字 + 右垫片15%） */
 .status-sync-box {
     display: flex;
     align-items: center;      /* 整体垂直居中 */
@@ -630,14 +630,14 @@ a.brand-badge:active {
     background: #F1F5F9;
     border-radius: var(--radius-btn);
     padding: 12px 18px;
-    gap: 8px;                 /* 小球与文字之间的紧贴间距 */
+    gap: 8px;                 /* 小球与文字紧挨间距 */
 }
 
-/* 第 1 块：左侧 20% 垫片 */
+/* 第 1 块：左侧 15% 垫片 */
 .status-sync-box::before {
     content: '';
-    flex: 0 0 20%;
-    max-width: 20%;
+    flex: 0 0 15%;
+    max-width: 15%;
 }
 
 /* 第 2 块：小球占位区（固定尺寸，不拉伸，垂直居中） */
@@ -680,7 +680,7 @@ a.brand-badge:active {
     75%, 100% { transform: scale(1.8); opacity: 0; } 
 }
 
-/* 第 3 块：文字内容（占据中间剩余宽度，左对齐紧贴小球） */
+/* 第 3 块：文字内容（占据中间剩余 70% 宽度，左对齐紧贴小球） */
 #sync-text {
     flex: 1 1 auto;
     font-size: 13.5px;
@@ -692,11 +692,11 @@ a.brand-badge:active {
     overflow-wrap: break-word;
 }
 
-/* 第 4 块：右侧 20% 垫片（与左侧完全对称） */
+/* 第 4 块：右侧 15% 垫片（与左侧完全对称） */
 .status-sync-box::after {
     content: '';
-    flex: 0 0 20%;
-    max-width: 20%;
+    flex: 0 0 15%;
+    max-width: 15%;
 }
 
 .gateway-footer {
@@ -808,7 +808,7 @@ a.brand-badge:active {
         width: 100%;
     }
 
-    /* 窄屏下两边 20% 垫片自动收缩为 0，留足宽度防止英文被挤成多行 */
+    /* 窄屏下两边 15% 垫片自动收起，防止内容被二次挤压 */
     .status-sync-box::before,
     .status-sync-box::after {
         display: none;
