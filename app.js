@@ -185,7 +185,6 @@ function renderOrder(data, isFromDataToken = false) {
     document.getElementById('custom-amount-wrap').classList.add('hidden');
     document.getElementById('payment-display-group').classList.remove('hidden');
     
-    // 统一设置属性和文案
     const syncEl = document.getElementById('sync-text');
     syncEl.setAttribute('data-i18n', 'status_channel_ready');
     syncEl.innerText = t("status_channel_ready");
@@ -281,6 +280,27 @@ async function searchOrder() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+    // 监听回车自动触发按钮
+    const searchInput = document.getElementById('input-search-key');
+    if (searchInput) {
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                searchOrder();
+            }
+        });
+    }
+
+    const customPriceInput = document.getElementById('input-custom-price');
+    if (customPriceInput) {
+        customPriceInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitCustomAmount();
+            }
+        });
+    }
+
     if (dataToken) {
         const cacheKey = `order_cache_${dataToken}`;
         const cachedDataStr = sessionStorage.getItem(cacheKey);
