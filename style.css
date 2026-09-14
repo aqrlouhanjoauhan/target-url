@@ -98,7 +98,7 @@ a.brand-badge:active {
     overflow: hidden;
 }
 
-/* 顶部导航：长语言自动适配，防止右侧被挤落折行 */
+/* 顶部导航：长标题自适应，右侧防挤压折行 */
 .panel-header {
     padding: 24px 28px;
     border-bottom: 1px solid var(--border-subtle);
@@ -622,30 +622,26 @@ a.brand-badge:active {
 
 .btn-copy:hover { background: #FFFFFF; border-color: #CBD5E1; }
 
-/* 状态同步模块：内联流式完全居中（单行/多行均紧凑相随，彻底解决圆点脱节偏左） */
+/* 状态同步模块：无论单行多行均居中且小球垂直居中对齐 */
 .status-sync-box {
-    display: block;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     background: #F1F5F9;
     border-radius: var(--radius-btn);
     padding: 12px 18px;
-    font-size: 13.5px;
-    line-height: 1.5;
-    color: var(--text-caption);
-    font-weight: 600;
 }
 
-/* 小圆点容器：作为文字流的首部内联元素，绝不被推至最左侧边界 */
+/* 小球占位区：固定尺寸，禁止 flex 挤压 */
 .pulse-dot-wrap {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     width: 16px;
     height: 16px;
     min-width: 16px;
     min-height: 16px;
-    vertical-align: -2px;
-    margin-right: 6px;
     flex-shrink: 0;
 }
 
@@ -672,10 +668,18 @@ a.brand-badge:active {
     animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
-@keyframes ping { 75%, 100% { transform: scale(1.8); opacity: 0; } }
+@keyframes ping { 
+    75%, 100% { transform: scale(1.8); opacity: 0; } 
+}
 
+/* 文字块：根据内容宽度自适应包裹，保持与小球紧凑相贴 */
 #sync-text {
-    display: inline;
+    flex: 0 1 auto;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--text-caption);
+    font-weight: 600;
+    text-align: left;
     word-break: normal;
     overflow-wrap: break-word;
 }
