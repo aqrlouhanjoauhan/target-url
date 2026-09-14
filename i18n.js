@@ -5,6 +5,7 @@ const I18N_RESOURCES = {
     "zh-CN": {
         page_title: "Solana SPL · USDT Instant Checkout",
         brand_title: "USDT 极速收银台",
+        btn_home_title: "返回主页",
         network_solana: "Solana (SPL)",
         search_placeholder: "输入订单编号或交易哈希查询单据...",
         btn_search: "查询单据",
@@ -84,6 +85,7 @@ const I18N_RESOURCES = {
     "zh-TW": {
         page_title: "Solana SPL · USDT Instant Checkout",
         brand_title: "USDT 極速收銀台",
+        btn_home_title: "返回首頁",
         network_solana: "Solana (SPL)",
         search_placeholder: "輸入訂單編號或交易哈希查詢單據...",
         btn_search: "查詢單據",
@@ -162,6 +164,7 @@ const I18N_RESOURCES = {
     "en": {
         page_title: "Solana SPL · USDT Instant Checkout",
         brand_title: "USDT Instant Checkout",
+        btn_home_title: "Back to Home",
         network_solana: "Solana (SPL)",
         search_placeholder: "Enter order ID or transaction hash to search...",
         btn_search: "Search Receipt",
@@ -240,6 +243,7 @@ const I18N_RESOURCES = {
     "ja": {
         page_title: "Solana SPL · USDT Instant Checkout",
         brand_title: "USDT 高速レジ",
+        btn_home_title: "ホームに戻る",
         network_solana: "Solana (SPL)",
         search_placeholder: "注文番号またはトランザクションハッシュを入力...",
         btn_search: "伝票を検索",
@@ -318,6 +322,7 @@ const I18N_RESOURCES = {
     "ko": {
         page_title: "Solana SPL · USDT Instant Checkout",
         brand_title: "USDT 초고속 결제창",
+        btn_home_title: "홈으로 돌아가기",
         network_solana: "Solana (SPL)",
         search_placeholder: "주문 번호 또는 트랜잭션 해시를 입력하여 조회...",
         btn_search: "영수증 조회",
@@ -396,6 +401,7 @@ const I18N_RESOURCES = {
     "es": {
         page_title: "Solana SPL · USDT Instant Checkout",
         brand_title: "Caja Rápida USDT",
+        btn_home_title: "Volver al inicio",
         network_solana: "Solana (SPL)",
         search_placeholder: "Ingrese el número de orden o hash de transacción para consultar...",
         btn_search: "Consultar documento",
@@ -474,6 +480,7 @@ const I18N_RESOURCES = {
     "ru": {
         page_title: "Solana SPL · USDT Instant Checkout",
         brand_title: "Экспресс-касса USDT",
+        btn_home_title: "На главную",
         network_solana: "Solana (SPL)",
         search_placeholder: "Введите номер заказа или хеш транзакции для поиска...",
         btn_search: "Найти документ",
@@ -552,6 +559,7 @@ const I18N_RESOURCES = {
     "ar": {
         page_title: "Solana SPL · USDT Instant Checkout",
         brand_title: "منصة الدفع السريع USDT",
+        btn_home_title: "العودة إلى الصفحة الرئيسية",
         network_solana: "Solana (SPL)",
         search_placeholder: "أدخل رقم الطلب أو تجزئة المعاملة للاستعلام...",
         btn_search: "استعلام عن الفاتورة",
@@ -630,6 +638,7 @@ const I18N_RESOURCES = {
     "fr": {
         page_title: "Solana SPL · USDT Instant Checkout",
         brand_title: "Caisse Rapide USDT",
+        btn_home_title: "Retour à l'accueil",
         network_solana: "Solana (SPL)",
         search_placeholder: "Entrez le numéro de commande ou le hash de transaction...",
         btn_search: "Rechercher",
@@ -708,6 +717,7 @@ const I18N_RESOURCES = {
     "pt": {
         page_title: "Solana SPL · USDT Instant Checkout",
         brand_title: "Caixa Rápido USDT",
+        btn_home_title: "Volver ao início",
         network_solana: "Solana (SPL)",
         search_placeholder: "Insira o número do pedido ou hash da transação para consultar...",
         btn_search: "Consultar documento",
@@ -786,6 +796,7 @@ const I18N_RESOURCES = {
     "de": {
         page_title: "Solana SPL · USDT Instant Checkout",
         brand_title: "USDT Sofort-Kasse",
+        btn_home_title: "Zurück zur Startseite",
         network_solana: "Solana (SPL)",
         search_placeholder: "Bestellnummer oder Transaktions-Hash eingeben...",
         btn_search: "Beleg suchen",
@@ -864,6 +875,7 @@ const I18N_RESOURCES = {
     "vi": {
         page_title: "Solana SPL · USDT Instant Checkout",
         brand_title: "Quầy Thu Ngân Siêu Tốc USDT",
+        btn_home_title: "Quay về trang chủ",
         network_solana: "Solana (SPL)",
         search_placeholder: "Nhập mã đơn hàng hoặc mã băm giao dịch để tra cứu hóa đơn...",
         btn_search: "Tra cứu hóa đơn",
