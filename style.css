@@ -87,7 +87,7 @@ a.brand-badge:active {
 
 .gateway-wrapper {
     width: 100%;
-    max-width: 680px;
+    max-width: 550px;
     display: flex;
     flex-direction: column;
     gap: 28px;
