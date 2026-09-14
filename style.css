@@ -709,7 +709,7 @@ a.brand-badge:active {
 
 .hidden { display: none !important; }
 
-/* 移动端响应式规则 */
+/* 移动端与极端窄屏自适应响应式规则 */
 @media (max-width: 640px) {
     body {
         padding: 16px 12px 36px;
@@ -736,6 +736,7 @@ a.brand-badge:active {
         gap: 15px;
     }
 
+    /* 搜索栏：窄屏下换行并铺满 */
     .search-container {
         flex-wrap: wrap;
         padding: 4px;
@@ -762,20 +763,25 @@ a.brand-badge:active {
         font-size: 42px;
     }
 
+    /* 地址卡片：窄屏下模仿订单查询栏，按钮独占一行并铺满居中 */
     .address-card {
-        flex-wrap: wrap;
-        padding: 11px 13px;
-        gap: 8px;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 12px 14px;
+        gap: 10px;
     }
 
     .address-text {
         width: 100%;
-        font-size: 12px;
+        font-size: 12.5px;
+        line-height: 1.4;
     }
 
     .btn-copy {
-        margin-left: auto;
-        padding: 6px 14px;
+        width: 100%;
+        padding: 9px 0;
+        text-align: center;
+        margin-left: 0;
     }
 
     .custom-input-row {
