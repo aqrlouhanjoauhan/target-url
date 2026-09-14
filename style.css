@@ -622,81 +622,63 @@ a.brand-badge:active {
 
 .btn-copy:hover { background: #FFFFFF; border-color: #CBD5E1; }
 
-/* 状态同步模块：4 块弹性布局（左垫片15% + 小球 + 紧贴文字 + 右垫片15%） */
+/* 状态同步模块：文本居中 + 底部全宽流动光条 */
 .status-sync-box {
-    display: flex;
-    align-items: center;      /* 整体垂直居中 */
-    justify-content: flex-start;
-    background: #F1F5F9;
-    border-radius: var(--radius-btn);
-    padding: 12px 18px;
-    gap: 8px;                 /* 小球与文字紧挨间距 */
-}
-
-/* 第 1 块：左侧 15% 垫片 */
-.status-sync-box::before {
-    content: '';
-    flex: 0 0 15%;
-    max-width: 15%;
-}
-
-/* 第 2 块：小球占位区（固定尺寸，不拉伸，垂直居中） */
-.pulse-dot-wrap {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
-    min-height: 16px;
-    flex-shrink: 0;
-    align-self: center;
+    background: #F1F5F9;
+    border-radius: var(--radius-btn);
+    padding: 14px 20px 16px; /* 底部稍微预留空间给光条 */
+    overflow: hidden;        /* 保证底部光条与外框微圆角完美契合 */
 }
 
-.pulse-dot {
-    position: relative;
-    width: 8px;
-    height: 8px;
-    min-width: 8px;
-    min-height: 8px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background: var(--gate-blue);
+/* 隐藏原本的小球结构（无需修改 HTML） */
+.pulse-dot-wrap {
+    display: none !important;
 }
 
-.pulse-dot::after {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: -3px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: rgba(37, 99, 235, 0.35);
-    animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-@keyframes ping { 
-    75%, 100% { transform: scale(1.8); opacity: 0; } 
-}
-
-/* 第 3 块：文字内容（占据中间剩余 70% 宽度，左对齐紧贴小球） */
+/* 文字块：无论单行多行，绝对水平居中对齐 */
 #sync-text {
-    flex: 1 1 auto;
+    width: 100%;
     font-size: 13.5px;
-    line-height: 1.45;
+    line-height: 1.5;
     color: var(--text-caption);
     font-weight: 600;
-    text-align: left;
+    text-align: center;
     word-break: normal;
     overflow-wrap: break-word;
 }
 
-/* 第 4 块：右侧 15% 垫片（与左侧完全对称） */
+/* 底部发光动态流动条（采用科技感翡翠绿到深蓝渐变平滑流动） */
 .status-sync-box::after {
     content: '';
-    flex: 0 0 15%;
-    max-width: 15%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+        90deg, 
+        transparent 0%, 
+        var(--usdt-aqua) 25%, 
+        var(--gate-blue) 50%, 
+        var(--sol-teal) 75%, 
+        transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: streamBar 2.2s linear infinite;
+    opacity: 0.85;
+}
+
+@keyframes streamBar {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
 }
 
 .gateway-footer {
@@ -806,16 +788,6 @@ a.brand-badge:active {
     .btn-confirm-amount {
         padding: 11px 0;
         width: 100%;
-    }
-
-    /* 窄屏下两边 15% 垫片自动收起，防止内容被二次挤压 */
-    .status-sync-box::before,
-    .status-sync-box::after {
-        display: none;
-    }
-
-    .status-sync-box {
-        justify-content: center;
     }
 
     .modal-container {
