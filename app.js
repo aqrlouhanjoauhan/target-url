@@ -155,11 +155,27 @@ function renderOrder(data, isFromDataToken = false) {
     document.getElementById('pay-amount').innerText = data.pay_amount;
     document.getElementById('target-address').innerText = data.address;
 
+    const productTitleWrap = document.getElementById('product-title-wrap');
+    const productTitleText = document.getElementById('product-title-text');
+
     if (isFromDataToken && data.project && data.project !== "__CUSTOM_MODE_ORDER__") {
-        document.getElementById('product-title-text').innerText = localizeProjectName(data.project);
-        document.getElementById('product-title-wrap').classList.remove('hidden');
+        productTitleText.setAttribute('data-raw-project', data.project);
+        
+        // 如果是系统预设标签，注入对应的 i18n key，以便切换语言时能够自适应刷新
+        if (data.project === "__FIXED_ORDER__") {
+            productTitleText.setAttribute('data-i18n', 'TAG_FIXED_ORDER');
+        } else if (data.project === "__UNNAMED_PROJECT__") {
+            productTitleText.setAttribute('data-i18n', 'TAG_UNNAMED_PROJECT');
+        } else if (data.project === "__PARSE_ERROR__") {
+            productTitleText.setAttribute('data-i18n', 'TAG_PARSE_ERROR');
+        } else {
+            productTitleText.removeAttribute('data-i18n');
+        }
+
+        productTitleText.innerText = localizeProjectName(data.project);
+        productTitleWrap.classList.remove('hidden');
     } else {
-        document.getElementById('product-title-wrap').classList.add('hidden');
+        productTitleWrap.classList.add('hidden');
     }
 
     const qrPayload = `solana:${data.address}?amount=${data.pay_amount}`;
@@ -190,7 +206,6 @@ async function fetchOrder(url, isFromDataToken = false, cacheKey = null) {
         const data = await res.json();
 
         if (!res.ok || !data.success) {
-            // 根据后端响应码转换成本地化文字
             const tipText = getCodeText(
                 data.code, 
                 isFromDataToken ? "toast_decrypt_failed" : "toast_get_pay_info_failed"
