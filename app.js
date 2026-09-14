@@ -133,7 +133,9 @@ function startPolling(orderId) {
             const data = await res.json();
             if (data.success && data.paid) {
                 clearInterval(pollTimer);
-                document.getElementById('sync-text').innerText = t("status_tx_confirmed");
+                const syncEl = document.getElementById('sync-text');
+                syncEl.setAttribute('data-i18n', 'status_tx_confirmed');
+                syncEl.innerText = t("status_tx_confirmed");
                 openOrderModal(data.order);
             }
         } catch {}
@@ -161,7 +163,6 @@ function renderOrder(data, isFromDataToken = false) {
     if (isFromDataToken && data.project && data.project !== "__CUSTOM_MODE_ORDER__") {
         productTitleText.setAttribute('data-raw-project', data.project);
         
-        // 如果是系统预设标签，注入对应的 i18n key，以便切换语言时能够自适应刷新
         if (data.project === "__FIXED_ORDER__") {
             productTitleText.setAttribute('data-i18n', 'TAG_FIXED_ORDER');
         } else if (data.project === "__UNNAMED_PROJECT__") {
@@ -183,7 +184,11 @@ function renderOrder(data, isFromDataToken = false) {
 
     document.getElementById('custom-amount-wrap').classList.add('hidden');
     document.getElementById('payment-display-group').classList.remove('hidden');
-    document.getElementById('sync-text').innerText = t("status_channel_ready");
+    
+    // 统一设置属性和文案
+    const syncEl = document.getElementById('sync-text');
+    syncEl.setAttribute('data-i18n', 'status_channel_ready');
+    syncEl.innerText = t("status_channel_ready");
 
     startPolling(currentOrderId);
 }
