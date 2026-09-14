@@ -997,13 +997,21 @@ function updatePageTexts() {
         });
     });
 
-    // === 新增：安全更新未出结果时的地址占位符，不覆盖真实钱包地址 ===
+    // === 安全更新未出结果时的地址占位符，不覆盖真实钱包地址 ===
     const addrEl = document.getElementById("target-address");
     if (addrEl) {
         const currentText = addrEl.innerText.trim();
-        // 只有在未加载完成时（包含省略号或关键词）才更新加载文案
         if (!currentText || currentText.includes("...") || currentText.includes("加载") || currentText.includes("Loading")) {
             addrEl.innerText = t("loading_text");
+        }
+    }
+
+    // === 动态刷新商品标题名称（如果存在且是内置标识） ===
+    const productTitleEl = document.getElementById("product-title-text");
+    if (productTitleEl) {
+        const rawCode = productTitleEl.getAttribute("data-raw-project");
+        if (rawCode) {
+            productTitleEl.innerText = localizeProjectName(rawCode);
         }
     }
 
