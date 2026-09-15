@@ -76,6 +76,7 @@ const I18N_RESOURCES = {
         ERR_ORDER_NOT_PAID: "未查询到已支付成功的订单记录",
         ERR_SERVER_ERROR: "服务器处理异常",
         ERR_NOT_FOUND: "请求的接口不存在",
+        ERR_DIRTY_COIN_DETECTED: "检测到付款钱包存在高危涉案风险，已被拦截，请更换安全钱包重新下单",
         TAG_UNNAMED_PROJECT: "未命名项目",
         TAG_PARSE_ERROR: "项目数据解析失败",
         TAG_FIXED_ORDER: "标准结算订单"
@@ -154,6 +155,7 @@ const I18N_RESOURCES = {
         ERR_ORDER_NOT_PAID: "未查詢到已支付成功的訂單記錄",
         ERR_SERVER_ERROR: "伺服器處理異常",
         ERR_NOT_FOUND: "請求的介面不存在",
+        ERR_DIRTY_COIN_DETECTED: "檢測到付款錢包存在高危涉案風險，已被攔截，請更換安全錢包重新下單",
         TAG_UNNAMED_PROJECT: "未命名項目",
         TAG_PARSE_ERROR: "項目數據解析失敗",
         TAG_FIXED_ORDER: "標準結算訂單"
@@ -232,6 +234,7 @@ const I18N_RESOURCES = {
         ERR_ORDER_NOT_PAID: "No settled bill found for this query",
         ERR_SERVER_ERROR: "Internal server processing error",
         ERR_NOT_FOUND: "Requested endpoint not found",
+        ERR_DIRTY_COIN_DETECTED: "High-risk or illicit activity detected from the payment wallet. Transaction blocked, please use another wallet",
         TAG_UNNAMED_PROJECT: "Unnamed Project",
         TAG_PARSE_ERROR: "Project data parsing failed",
         TAG_FIXED_ORDER: "Standard Order"
@@ -310,6 +313,7 @@ const I18N_RESOURCES = {
         ERR_ORDER_NOT_PAID: "支払い完了が確認された注文が見つかりません",
         ERR_SERVER_ERROR: "サーバー処理エラーが発生しました",
         ERR_NOT_FOUND: "リクエストされたエンドポイントが存在しません",
+        ERR_DIRTY_COIN_DETECTED: "支払元ウォレットに不正・リスク取引が検出されたため取引を遮断しました。安全なウォレットでお試しください",
         TAG_UNNAMED_PROJECT: "無名のプロジェクト",
         TAG_PARSE_ERROR: "プロジェクトデータの解析に失敗しました",
         TAG_FIXED_ORDER: "標準決済注文"
@@ -388,6 +392,7 @@ const I18N_RESOURCES = {
         ERR_ORDER_NOT_PAID: "결제 완료된 주문 기록을 찾을 수 없습니다",
         ERR_SERVER_ERROR: "서버 처리 오류",
         ERR_NOT_FOUND: "요청한 엔드포인트를 찾을 수 없습니다",
+        ERR_DIRTY_COIN_DETECTED: "결제 지갑에서 위험/부정 거래가 감지되어 차단되었습니다. 다른 지갑으로 시도해 주세요",
         TAG_UNNAMED_PROJECT: "이름 없는 프로젝트",
         TAG_PARSE_ERROR: "프로젝트 데이터 해석 실패",
         TAG_FIXED_ORDER: "표준 정산 주문"
@@ -466,6 +471,7 @@ const I18N_RESOURCES = {
         ERR_ORDER_NOT_PAID: "No se encontró registro de orden pagada",
         ERR_SERVER_ERROR: "Error interno del servidor",
         ERR_NOT_FOUND: "El recurso solicitado no existe",
+        ERR_DIRTY_COIN_DETECTED: "Se detectó actividad de alto riesgo en la billetera de pago. Transacción bloqueada, use otra billetera",
         TAG_UNNAMED_PROJECT: "Proyecto sin nombre",
         TAG_PARSE_ERROR: "Error al analizar datos del proyecto",
         TAG_FIXED_ORDER: "Orden estándar"
@@ -544,6 +550,7 @@ const I18N_RESOURCES = {
         ERR_ORDER_NOT_PAID: "Записи об оплаченном заказе не найдено",
         ERR_SERVER_ERROR: "Внутренняя ошибка сервера",
         ERR_NOT_FOUND: "Запрашиваемый ресурс не найден",
+        ERR_DIRTY_COIN_DETECTED: "Обнаружена подозрительная активность кошелька. Транзакция заблокирована, используйте другой кошелек",
         TAG_UNNAMED_PROJECT: "Безымянный проект",
         TAG_PARSE_ERROR: "Ошибка парсинга данных проекта",
         TAG_FIXED_ORDER: "Стандартный заказ"
@@ -622,6 +629,7 @@ const I18N_RESOURCES = {
         ERR_ORDER_NOT_PAID: "لم يتم العثور على سجل طلب مدفوع",
         ERR_SERVER_ERROR: "خطأ في المعالجة الداخلية للخادم",
         ERR_NOT_FOUND: "المسار المطلوب غير موجود",
+        ERR_DIRTY_COIN_DETECTED: "تم اكتشاف نشاط عالي الخطورة من محفظة الدفع. تم حظر المعاملة، يرجى استخدام محفظة أخرى",
         TAG_UNNAMED_PROJECT: "مشروع بدون اسم",
         TAG_PARSE_ERROR: "فشل تحليل بيانات المشروع",
         TAG_FIXED_ORDER: "طلب تسوية قياسي"
@@ -700,6 +708,7 @@ const I18N_RESOURCES = {
         ERR_ORDER_NOT_PAID: "Aucun enregistrement de commande payée trouvé",
         ERR_SERVER_ERROR: "Erreur de traitement du serveur",
         ERR_NOT_FOUND: "Le point de terminaison demandé n'existe pas",
+        ERR_DIRTY_COIN_DETECTED: "Activité à haut risque détectée sur le portefeuille de paiement. Transaction bloquée, veuillez utiliser un autre portefeuille",
         TAG_UNNAMED_PROJECT: "Projet sans nom",
         TAG_PARSE_ERROR: "Échec de l'analyse des données du projet",
         TAG_FIXED_ORDER: "Commande standard"
@@ -778,6 +787,7 @@ const I18N_RESOURCES = {
         ERR_ORDER_NOT_PAID: "Nenhum registro de pedido pago foi encontrado",
         ERR_SERVER_ERROR: "Erro interno no servidor",
         ERR_NOT_FOUND: "O recurso solicitado não existe",
+        ERR_DIRTY_COIN_DETECTED: "Atividade de alto risco detectada na carteira de pagamento. Transação bloqueada, use outra carteira",
         TAG_UNNAMED_PROJECT: "Projeto sem nome",
         TAG_PARSE_ERROR: "Falha na análise dos dados do projeto",
         TAG_FIXED_ORDER: "Pedido padrão"
@@ -856,6 +866,7 @@ const I18N_RESOURCES = {
         ERR_ORDER_NOT_PAID: "Kein bezahlter Auftrag gefunden",
         ERR_SERVER_ERROR: "Interner Serverfehler",
         ERR_NOT_FOUND: "Angeforderter Endpunkt nicht gefunden",
+        ERR_DIRTY_COIN_DETECTED: "Verdächtige Aktivitäten auf der Zahlungs-Wallet erkannt. Transaktion blockiert, bitte andere Wallet nutzen",
         TAG_UNNAMED_PROJECT: "Unbenanntes Projekt",
         TAG_PARSE_ERROR: "Fehler beim Parsen der Projektdaten",
         TAG_FIXED_ORDER: "Standard-Auftrag"
@@ -934,6 +945,7 @@ const I18N_RESOURCES = {
         ERR_ORDER_NOT_PAID: "Không tìm thấy hồ sơ đơn hàng đã thanh toán",
         ERR_SERVER_ERROR: "Lỗi xử lý máy chủ",
         ERR_NOT_FOUND: "Không tìm thấy cổng yêu cầu",
+        ERR_DIRTY_COIN_DETECTED: "Phát hiện ví thanh toán có rủi ro cao hoặc bất thường. Đã chặn giao dịch, vui lòng dùng ví khác",
         TAG_UNNAMED_PROJECT: "Dự án chưa đặt tên",
         TAG_PARSE_ERROR: "Phân tích dữ liệu dự án thất bại",
         TAG_FIXED_ORDER: "Đơn hàng thanh toán tiêu chuẩn"
