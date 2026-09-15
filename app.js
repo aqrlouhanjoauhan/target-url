@@ -1,5 +1,4 @@
 const API_BASE = "https://solana-pay-gateway.nodecore.workers.dev";
-const USDT_MINT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB";
 const urlParams = new URLSearchParams(window.location.search);
 
 const dataToken = urlParams.get('data');
@@ -13,11 +12,6 @@ let currentStorage = localStorage;
 let pollTimer = null;
 let toastTimer = null;
 let lastRenderedOrderInfo = null;
-
-// 存储双二维码链接
-let qrPayUrl = "";
-let qrAddressUrl = "";
-let currentQrMode = "pay"; // 'pay' | 'address'
 
 document.getElementById('current-year').innerText = new Date().getFullYear();
 
@@ -187,73 +181,6 @@ function startPolling(orderId) {
     }, 3000);
 }
 
-// 动态创建并注入双二维码切换 Tab（不改动原始 HTML）
-function ensureQrTabs() {
-    const qrImg = document.getElementById('qr-code-img');
-    if (!qrImg || document.getElementById('qr-toggle-container')) return;
-
-    const tabContainer = document.createElement('div');
-    tabContainer.id = 'qr-toggle-container';
-    tabContainer.style.cssText = `
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        margin-bottom: 12px;
-        font-size: 12px;
-    `;
-
-    tabContainer.innerHTML = `
-        <button type="button" id="btn-qr-pay" style="
-            padding: 4px 12px;
-            border-radius: 6px;
-            border: 1px solid #CBD5E1;
-            background: #0F172A;
-            color: #FFFFFF;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s;
-        ">Solana Pay</button>
-        <button type="button" id="btn-qr-addr" style="
-            padding: 4px 12px;
-            border-radius: 6px;
-            border: 1px solid #CBD5E1;
-            background: #F1F5F9;
-            color: #475569;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s;
-        ">纯地址 (交易所)</button>
-    `;
-
-    qrImg.parentNode.insertBefore(tabContainer, qrImg);
-
-    document.getElementById('btn-qr-pay').onclick = () => switchQrMode('pay');
-    document.getElementById('btn-qr-addr').onclick = () => switchQrMode('address');
-}
-
-function switchQrMode(mode) {
-    currentQrMode = mode;
-    const btnPay = document.getElementById('btn-qr-pay');
-    const btnAddr = document.getElementById('btn-qr-addr');
-    const qrImg = document.getElementById('qr-code-img');
-
-    if (!btnPay || !btnAddr || !qrImg) return;
-
-    if (mode === 'pay') {
-        btnPay.style.background = '#0F172A';
-        btnPay.style.color = '#FFFFFF';
-        btnAddr.style.background = '#F1F5F9';
-        btnAddr.style.color = '#475569';
-        qrImg.src = `https://qr-code.nodecore.workers.dev/?size=240x240&margin=0&color=0F172A&data=${encodeURIComponent(qrPayUrl)}`;
-    } else {
-        btnAddr.style.background = '#0F172A';
-        btnAddr.style.color = '#FFFFFF';
-        btnPay.style.background = '#F1F5F9';
-        btnPay.style.color = '#475569';
-        qrImg.src = `https://qr-code.nodecore.workers.dev/?size=240x240&margin=0&color=0F172A&data=${encodeURIComponent(qrAddressUrl)}`;
-    }
-}
-
 function renderOrder(data, isFromDataToken = false) {
     currentOrderId = data.order_id;
     globalAmount = data.pay_amount;
@@ -291,13 +218,8 @@ function renderOrder(data, isFromDataToken = false) {
         productTitleWrap.classList.add('hidden');
     }
 
-    // 组装两种二维码 Payload
-    qrPayUrl = data.solana_pay_url || `solana:${data.address}?amount=${data.pay_amount}&spl-token=${USDT_MINT}`;
-    qrAddressUrl = data.address;
-
-    // 动态注入并刷新切换按钮
-    ensureQrTabs();
-    switchQrMode(currentQrMode);
+    // 二维码纯粹只包含收款公钥地址，全平台扫码直接识别
+    document.getElementById('qr-code-img').src = `https://qr-code.nodecore.workers.dev/?size=240x240&margin=0&color=0F172A&data=${encodeURIComponent(data.address)}`;
 
     document.getElementById('custom-amount-wrap').classList.add('hidden');
     document.getElementById('payment-display-group').classList.remove('hidden');
