@@ -8,7 +8,8 @@ const payParam = urlParams.get('pay');
 let currentOrderId = "";
 let globalAmount = "";
 let currentProject = "";
-let currentCacheKey = ""; // 隔离后的唯一 LocalStorage Key
+let currentCacheKey = ""; 
+let currentStorage = localStorage; // 动态存储引擎：密文用 localStorage，自定义金额用 sessionStorage
 let pollTimer = null;
 let toastTimer = null;
 let lastRenderedOrderInfo = null;
@@ -127,14 +128,13 @@ ${o.url ? t("copy_header_delivery") + o.url : ""}
     });
 }
 
-// 核心：处理订单失效/不存在，清空缓存并重新拉取
+// 核心：处理订单失效/不存在，清空当前对应的存储介质并重新拉取
 function handleOrderExpiredAndRecreate() {
     if (pollTimer) clearInterval(pollTimer);
-    if (currentCacheKey) {
-        localStorage.removeItem(currentCacheKey);
+    if (currentCacheKey && currentStorage) {
+        currentStorage.removeItem(currentCacheKey);
     }
     
-    // 重新发起请求创建全新订单
     if (dataToken) {
         fetchOrder(`${API_BASE}/?data=${encodeURIComponent(dataToken)}`, true, currentCacheKey);
     } else if (payParam && !isNaN(parseFloat(payParam)) && parseFloat(payParam) > 0) {
@@ -149,7 +149,7 @@ function startPolling(orderId) {
         try {
             const res = await fetch(`${API_BASE}/check-status?order_id=${encodeURIComponent(orderId)}`);
             
-            // 后端返回 404 说明旧订单在后端已过期或已被清理，前端执行清空并重新创建
+            // 后端返回 404 说明订单在库中已不存在，执行自愈清空重拉
             if (res.status === 404) {
                 handleOrderExpiredAndRecreate();
                 return;
@@ -157,13 +157,11 @@ function startPolling(orderId) {
 
             const data = await res.json();
             
-            // 404 兜底拦截
             if (data.code === "ERR_ORDER_NOT_FOUND") {
                 handleOrderExpiredAndRecreate();
                 return;
             }
 
-            // 命中 Helius 风控黑名单拦截
             if (data.code === "ERR_DIRTY_COIN_DETECTED") {
                 clearInterval(pollTimer);
                 showToast(t("ERR_DIRTY_COIN_DETECTED"));
@@ -172,11 +170,10 @@ function startPolling(orderId) {
                 return;
             }
 
-            // 支付成功
             if (data.success && data.paid) {
                 clearInterval(pollTimer);
-                if (currentCacheKey) {
-                    localStorage.removeItem(currentCacheKey);
+                if (currentCacheKey && currentStorage) {
+                    currentStorage.removeItem(currentCacheKey);
                 }
                 const syncEl = document.getElementById('sync-text');
                 syncEl.setAttribute('data-i18n', 'status_tx_confirmed');
@@ -263,10 +260,10 @@ async function fetchOrder(url, isFromDataToken = false, cacheKey = null) {
             return;
         }
 
-        // 保存到 localStorage
-        if (cacheKey) {
+        // 写入当前模式对应的存储区（localStorage 或 sessionStorage）
+        if (cacheKey && currentStorage) {
             try {
-                localStorage.setItem(cacheKey, JSON.stringify(data));
+                currentStorage.setItem(cacheKey, JSON.stringify(data));
             } catch (e) {}
         }
 
@@ -346,10 +343,11 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 1. 密文模式（区分并隔离：正常商品、匿名商品均依赖独一无二的 data 字符串作为 key）
+    // 1. 密文模式（固定商品、匿名商品）：持久化存储进 localStorage
     if (dataToken) {
+        currentStorage = localStorage;
         currentCacheKey = `solpay_token_${dataToken.trim()}`;
-        const cachedDataStr = localStorage.getItem(currentCacheKey);
+        const cachedDataStr = currentStorage.getItem(currentCacheKey);
 
         if (cachedDataStr) {
             try {
@@ -357,36 +355,36 @@ window.addEventListener('DOMContentLoaded', () => {
                 renderOrder(cachedData, true);
                 return;
             } catch (e) {
-                localStorage.removeItem(currentCacheKey);
+                currentStorage.removeItem(currentCacheKey);
             }
         }
 
         fetchOrder(`${API_BASE}/?data=${encodeURIComponent(dataToken)}`, true, currentCacheKey);
     } 
-    // 2. 自定义金额模式（以 payParam 具体数值为隔离 key，金额变动自动触发新单）
+    // 2. 自定义金额模式：切换至 sessionStorage，窗口关闭即随风而逝
     else if (payParam && !isNaN(parseFloat(payParam)) && parseFloat(payParam) > 0) {
+        currentStorage = sessionStorage;
         const amountVal = parseFloat(payParam);
         document.getElementById('input-custom-price').value = amountVal;
 
         currentCacheKey = `solpay_custom_${amountVal}`;
-        const cachedPayStr = localStorage.getItem(currentCacheKey);
+        const cachedPayStr = currentStorage.getItem(currentCacheKey);
 
         if (cachedPayStr) {
             try {
                 const cachedData = JSON.parse(cachedPayStr);
-                // 严格校验缓存金额与当前要求的金额是否一致
                 if (parseFloat(cachedData.pay_amount) === amountVal) {
                     renderOrder(cachedData, false);
                     return;
                 }
             } catch (e) {
-                localStorage.removeItem(currentCacheKey);
+                currentStorage.removeItem(currentCacheKey);
             }
         }
 
         fetchOrder(`${API_BASE}/?price=${encodeURIComponent(amountVal)}`, false, currentCacheKey);
     } 
-    // 3. 无参数时进入输入金额模式
+    // 3. 无参数状态
     else {
         switchToCustomMode();
     }
