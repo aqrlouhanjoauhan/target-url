@@ -1,4 +1,5 @@
 const API_BASE = "https://solana-pay-gateway.nodecore.workers.dev";
+const USDT_MINT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB";
 const urlParams = new URLSearchParams(window.location.search);
 
 const dataToken = urlParams.get('data');
@@ -131,6 +132,17 @@ function startPolling(orderId) {
         try {
             const res = await fetch(`${API_BASE}/check-status?order_id=${encodeURIComponent(orderId)}`);
             const data = await res.json();
+            
+            // 命中 Helius 风控黑名单拦截
+            if (data.code === "ERR_DIRTY_COIN_DETECTED") {
+                clearInterval(pollTimer);
+                showToast(t("ERR_DIRTY_COIN_DETECTED"));
+                const syncEl = document.getElementById('sync-text');
+                syncEl.innerText = t("ERR_DIRTY_COIN_DETECTED");
+                return;
+            }
+
+            // 支付成功
             if (data.success && data.paid) {
                 clearInterval(pollTimer);
                 const syncEl = document.getElementById('sync-text');
@@ -179,7 +191,8 @@ function renderOrder(data, isFromDataToken = false) {
         productTitleWrap.classList.add('hidden');
     }
 
-    const qrPayload = `solana:${data.address}?amount=${data.pay_amount}`;
+    // 二维码严格注入 SPL-Token 参数，手机扫码直接识别为 USDT
+    const qrPayload = data.solana_pay_url || `solana:${data.address}?amount=${data.pay_amount}&spl-token=${USDT_MINT}`;
     document.getElementById('qr-code-img').src = `https://qr-code.nodecore.workers.dev/?size=240x240&margin=0&color=0F172A&data=${encodeURIComponent(qrPayload)}`;
 
     document.getElementById('custom-amount-wrap').classList.add('hidden');
@@ -280,7 +293,6 @@ async function searchOrder() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    // 监听回车自动触发按钮
     const searchInput = document.getElementById('input-search-key');
     if (searchInput) {
         searchInput.addEventListener('keydown', (e) => {
