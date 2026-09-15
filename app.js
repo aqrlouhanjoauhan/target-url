@@ -1,4 +1,3 @@
-//const API_BASE = "https://usdt-target-url.nodecore.workers.dev";
 const API_BASE = "https://solana-pay-gateway.nodecore.workers.dev";
 const urlParams = new URLSearchParams(window.location.search);
 
