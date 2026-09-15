@@ -8,6 +8,7 @@ const payParam = urlParams.get('pay');
 let currentOrderId = "";
 let globalAmount = "";
 let currentProject = "";
+let currentCacheKey = ""; // 隔离后的唯一 LocalStorage Key
 let pollTimer = null;
 let toastTimer = null;
 let lastRenderedOrderInfo = null;
@@ -126,13 +127,42 @@ ${o.url ? t("copy_header_delivery") + o.url : ""}
     });
 }
 
+// 核心：处理订单失效/不存在，清空缓存并重新拉取
+function handleOrderExpiredAndRecreate() {
+    if (pollTimer) clearInterval(pollTimer);
+    if (currentCacheKey) {
+        localStorage.removeItem(currentCacheKey);
+    }
+    
+    // 重新发起请求创建全新订单
+    if (dataToken) {
+        fetchOrder(`${API_BASE}/?data=${encodeURIComponent(dataToken)}`, true, currentCacheKey);
+    } else if (payParam && !isNaN(parseFloat(payParam)) && parseFloat(payParam) > 0) {
+        const amountVal = parseFloat(payParam);
+        fetchOrder(`${API_BASE}/?price=${encodeURIComponent(amountVal)}`, false, currentCacheKey);
+    }
+}
+
 function startPolling(orderId) {
     if (pollTimer) clearInterval(pollTimer);
     pollTimer = setInterval(async () => {
         try {
             const res = await fetch(`${API_BASE}/check-status?order_id=${encodeURIComponent(orderId)}`);
+            
+            // 后端返回 404 说明旧订单在后端已过期或已被清理，前端执行清空并重新创建
+            if (res.status === 404) {
+                handleOrderExpiredAndRecreate();
+                return;
+            }
+
             const data = await res.json();
             
+            // 404 兜底拦截
+            if (data.code === "ERR_ORDER_NOT_FOUND") {
+                handleOrderExpiredAndRecreate();
+                return;
+            }
+
             // 命中 Helius 风控黑名单拦截
             if (data.code === "ERR_DIRTY_COIN_DETECTED") {
                 clearInterval(pollTimer);
@@ -145,6 +175,9 @@ function startPolling(orderId) {
             // 支付成功
             if (data.success && data.paid) {
                 clearInterval(pollTimer);
+                if (currentCacheKey) {
+                    localStorage.removeItem(currentCacheKey);
+                }
                 const syncEl = document.getElementById('sync-text');
                 syncEl.setAttribute('data-i18n', 'status_tx_confirmed');
                 syncEl.innerText = t("status_tx_confirmed");
@@ -191,7 +224,6 @@ function renderOrder(data, isFromDataToken = false) {
         productTitleWrap.classList.add('hidden');
     }
 
-    // 二维码严格注入 SPL-Token 参数，手机扫码直接识别为 USDT
     const qrPayload = data.solana_pay_url || `solana:${data.address}?amount=${data.pay_amount}&spl-token=${USDT_MINT}`;
     document.getElementById('qr-code-img').src = `https://qr-code.nodecore.workers.dev/?size=240x240&margin=0&color=0F172A&data=${encodeURIComponent(qrPayload)}`;
 
@@ -231,9 +263,10 @@ async function fetchOrder(url, isFromDataToken = false, cacheKey = null) {
             return;
         }
 
+        // 保存到 localStorage
         if (cacheKey) {
             try {
-                sessionStorage.setItem(cacheKey, JSON.stringify(data));
+                localStorage.setItem(cacheKey, JSON.stringify(data));
             } catch (e) {}
         }
 
@@ -313,9 +346,10 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 1. 密文模式（区分并隔离：正常商品、匿名商品均依赖独一无二的 data 字符串作为 key）
     if (dataToken) {
-        const cacheKey = `order_cache_${dataToken}`;
-        const cachedDataStr = sessionStorage.getItem(cacheKey);
+        currentCacheKey = `solpay_token_${dataToken.trim()}`;
+        const cachedDataStr = localStorage.getItem(currentCacheKey);
 
         if (cachedDataStr) {
             try {
@@ -323,30 +357,37 @@ window.addEventListener('DOMContentLoaded', () => {
                 renderOrder(cachedData, true);
                 return;
             } catch (e) {
-                sessionStorage.removeItem(cacheKey);
+                localStorage.removeItem(currentCacheKey);
             }
         }
 
-        fetchOrder(`${API_BASE}/?data=${encodeURIComponent(dataToken)}`, true, cacheKey);
-    } else if (payParam && !isNaN(parseFloat(payParam)) && parseFloat(payParam) > 0) {
+        fetchOrder(`${API_BASE}/?data=${encodeURIComponent(dataToken)}`, true, currentCacheKey);
+    } 
+    // 2. 自定义金额模式（以 payParam 具体数值为隔离 key，金额变动自动触发新单）
+    else if (payParam && !isNaN(parseFloat(payParam)) && parseFloat(payParam) > 0) {
         const amountVal = parseFloat(payParam);
         document.getElementById('input-custom-price').value = amountVal;
 
-        const payCacheKey = `pay_cache_${amountVal}`;
-        const cachedPayStr = sessionStorage.getItem(payCacheKey);
+        currentCacheKey = `solpay_custom_${amountVal}`;
+        const cachedPayStr = localStorage.getItem(currentCacheKey);
 
         if (cachedPayStr) {
             try {
                 const cachedData = JSON.parse(cachedPayStr);
-                renderOrder(cachedData, false);
-                return;
+                // 严格校验缓存金额与当前要求的金额是否一致
+                if (parseFloat(cachedData.pay_amount) === amountVal) {
+                    renderOrder(cachedData, false);
+                    return;
+                }
             } catch (e) {
-                sessionStorage.removeItem(payCacheKey);
+                localStorage.removeItem(currentCacheKey);
             }
         }
 
-        fetchOrder(`${API_BASE}/?price=${encodeURIComponent(amountVal)}`, false, payCacheKey);
-    } else {
+        fetchOrder(`${API_BASE}/?price=${encodeURIComponent(amountVal)}`, false, currentCacheKey);
+    } 
+    // 3. 无参数时进入输入金额模式
+    else {
         switchToCustomMode();
     }
 });
