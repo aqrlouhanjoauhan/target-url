@@ -9,10 +9,15 @@ let currentOrderId = "";
 let globalAmount = "";
 let currentProject = "";
 let currentCacheKey = ""; 
-let currentStorage = localStorage; // 动态存储引擎：密文用 localStorage，自定义金额用 sessionStorage
+let currentStorage = localStorage; 
 let pollTimer = null;
 let toastTimer = null;
 let lastRenderedOrderInfo = null;
+
+// 存储双二维码链接
+let qrPayUrl = "";
+let qrAddressUrl = "";
+let currentQrMode = "pay"; // 'pay' | 'address'
 
 document.getElementById('current-year').innerText = new Date().getFullYear();
 
@@ -128,7 +133,6 @@ ${o.url ? t("copy_header_delivery") + o.url : ""}
     });
 }
 
-// 核心：处理订单失效/不存在，清空当前对应的存储介质并重新拉取
 function handleOrderExpiredAndRecreate() {
     if (pollTimer) clearInterval(pollTimer);
     if (currentCacheKey && currentStorage) {
@@ -149,7 +153,6 @@ function startPolling(orderId) {
         try {
             const res = await fetch(`${API_BASE}/check-status?order_id=${encodeURIComponent(orderId)}`);
             
-            // 后端返回 404 说明订单在库中已不存在，执行自愈清空重拉
             if (res.status === 404) {
                 handleOrderExpiredAndRecreate();
                 return;
@@ -182,6 +185,73 @@ function startPolling(orderId) {
             }
         } catch {}
     }, 3000);
+}
+
+// 动态创建并注入双二维码切换 Tab（不改动原始 HTML）
+function ensureQrTabs() {
+    const qrImg = document.getElementById('qr-code-img');
+    if (!qrImg || document.getElementById('qr-toggle-container')) return;
+
+    const tabContainer = document.createElement('div');
+    tabContainer.id = 'qr-toggle-container';
+    tabContainer.style.cssText = `
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        font-size: 12px;
+    `;
+
+    tabContainer.innerHTML = `
+        <button type="button" id="btn-qr-pay" style="
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid #CBD5E1;
+            background: #0F172A;
+            color: #FFFFFF;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        ">Solana Pay</button>
+        <button type="button" id="btn-qr-addr" style="
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid #CBD5E1;
+            background: #F1F5F9;
+            color: #475569;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        ">纯地址 (交易所)</button>
+    `;
+
+    qrImg.parentNode.insertBefore(tabContainer, qrImg);
+
+    document.getElementById('btn-qr-pay').onclick = () => switchQrMode('pay');
+    document.getElementById('btn-qr-addr').onclick = () => switchQrMode('address');
+}
+
+function switchQrMode(mode) {
+    currentQrMode = mode;
+    const btnPay = document.getElementById('btn-qr-pay');
+    const btnAddr = document.getElementById('btn-qr-addr');
+    const qrImg = document.getElementById('qr-code-img');
+
+    if (!btnPay || !btnAddr || !qrImg) return;
+
+    if (mode === 'pay') {
+        btnPay.style.background = '#0F172A';
+        btnPay.style.color = '#FFFFFF';
+        btnAddr.style.background = '#F1F5F9';
+        btnAddr.style.color = '#475569';
+        qrImg.src = `https://qr-code.nodecore.workers.dev/?size=240x240&margin=0&color=0F172A&data=${encodeURIComponent(qrPayUrl)}`;
+    } else {
+        btnAddr.style.background = '#0F172A';
+        btnAddr.style.color = '#FFFFFF';
+        btnPay.style.background = '#F1F5F9';
+        btnPay.style.color = '#475569';
+        qrImg.src = `https://qr-code.nodecore.workers.dev/?size=240x240&margin=0&color=0F172A&data=${encodeURIComponent(qrAddressUrl)}`;
+    }
 }
 
 function renderOrder(data, isFromDataToken = false) {
@@ -221,8 +291,13 @@ function renderOrder(data, isFromDataToken = false) {
         productTitleWrap.classList.add('hidden');
     }
 
-    const qrPayload = data.solana_pay_url || `solana:${data.address}?amount=${data.pay_amount}&spl-token=${USDT_MINT}`;
-    document.getElementById('qr-code-img').src = `https://qr-code.nodecore.workers.dev/?size=240x240&margin=0&color=0F172A&data=${encodeURIComponent(qrPayload)}`;
+    // 组装两种二维码 Payload
+    qrPayUrl = data.solana_pay_url || `solana:${data.address}?amount=${data.pay_amount}&spl-token=${USDT_MINT}`;
+    qrAddressUrl = data.address;
+
+    // 动态注入并刷新切换按钮
+    ensureQrTabs();
+    switchQrMode(currentQrMode);
 
     document.getElementById('custom-amount-wrap').classList.add('hidden');
     document.getElementById('payment-display-group').classList.remove('hidden');
@@ -260,7 +335,6 @@ async function fetchOrder(url, isFromDataToken = false, cacheKey = null) {
             return;
         }
 
-        // 写入当前模式对应的存储区（localStorage 或 sessionStorage）
         if (cacheKey && currentStorage) {
             try {
                 currentStorage.setItem(cacheKey, JSON.stringify(data));
@@ -343,7 +417,6 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 1. 密文模式（固定商品、匿名商品）：持久化存储进 localStorage
     if (dataToken) {
         currentStorage = localStorage;
         currentCacheKey = `solpay_token_${dataToken.trim()}`;
@@ -361,7 +434,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
         fetchOrder(`${API_BASE}/?data=${encodeURIComponent(dataToken)}`, true, currentCacheKey);
     } 
-    // 2. 自定义金额模式：切换至 sessionStorage，窗口关闭即随风而逝
     else if (payParam && !isNaN(parseFloat(payParam)) && parseFloat(payParam) > 0) {
         currentStorage = sessionStorage;
         const amountVal = parseFloat(payParam);
@@ -384,7 +456,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
         fetchOrder(`${API_BASE}/?price=${encodeURIComponent(amountVal)}`, false, currentCacheKey);
     } 
-    // 3. 无参数状态
     else {
         switchToCustomMode();
     }
