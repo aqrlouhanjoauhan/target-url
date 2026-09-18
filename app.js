@@ -137,7 +137,7 @@ function handleOrderExpiredAndRecreate() {
         fetchOrder(`${API_BASE}/?data=${encodeURIComponent(dataToken)}`, true, currentCacheKey);
     } else if (payParam && !isNaN(parseFloat(payParam)) && parseFloat(payParam) > 0) {
         const amountVal = parseFloat(payParam);
-        fetchOrder(`${API_BASE}/?price=${encodeURIComponent(amountVal)}`, false, currentCacheKey);
+        fetchOrder(`${API_BASE}/?price=${encodeURIComponent(amountVal)}`, false, null);
     }
 }
 
@@ -218,7 +218,6 @@ function renderOrder(data, isFromDataToken = false) {
         productTitleWrap.classList.add('hidden');
     }
 
-    // 二维码纯粹只包含收款公钥地址，全平台扫码直接识别
     document.getElementById('qr-code-img').src = `https://qr-code.nodecore.workers.dev/?size=240x240&margin=0&color=0F172A&data=${encodeURIComponent(data.address)}`;
 
     document.getElementById('custom-amount-wrap').classList.add('hidden');
@@ -318,6 +317,49 @@ async function searchOrder() {
     }
 }
 
+/**
+ * 校验缓存的订单状态，如果有效则渲染，失效/已过期则重新获取新订单
+ */
+async function validateAndRenderCache(cachedData, fetchUrl, isFromDataToken, cacheKey) {
+    const loaderEl = document.getElementById('checkout-loader');
+    loaderEl.classList.remove('hidden');
+
+    try {
+        const res = await fetch(`${API_BASE}/check-status?order_id=${encodeURIComponent(cachedData.order_id)}`);
+        
+        // 订单在服务端已不存在/过期
+        if (res.status === 404) {
+            if (currentStorage && cacheKey) currentStorage.removeItem(cacheKey);
+            await fetchOrder(fetchUrl, isFromDataToken, cacheKey);
+            return;
+        }
+
+        const checkData = await res.json();
+
+        // 订单无效或已被清理
+        if (checkData.code === "ERR_ORDER_NOT_FOUND" || (checkData.order && checkData.order.status === "EXPIRED")) {
+            if (currentStorage && cacheKey) currentStorage.removeItem(cacheKey);
+            await fetchOrder(fetchUrl, isFromDataToken, cacheKey);
+            return;
+        }
+
+        // 订单已支付成功
+        if (checkData.success && checkData.paid) {
+            if (currentStorage && cacheKey) currentStorage.removeItem(cacheKey);
+            openOrderModal(checkData.order);
+            return;
+        }
+
+        // 订单依然有效且未完成支付，正常显示
+        renderOrder(cachedData, isFromDataToken);
+    } catch (e) {
+        // 网络异常时，尝试重新获取最新订单
+        await fetchOrder(fetchUrl, isFromDataToken, cacheKey);
+    } finally {
+        loaderEl.classList.add('hidden');
+    }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('input-search-key');
     if (searchInput) {
@@ -343,32 +385,14 @@ window.addEventListener('DOMContentLoaded', () => {
         currentStorage = localStorage;
         currentCacheKey = `solpay_token_${dataToken.trim()}`;
         const cachedDataStr = currentStorage.getItem(currentCacheKey);
+        const fetchUrl = `${API_BASE}/?data=${encodeURIComponent(dataToken)}`;
 
         if (cachedDataStr) {
             try {
                 const cachedData = JSON.parse(cachedDataStr);
-                renderOrder(cachedData, true);
-                return;
-            } catch (e) {
-                currentStorage.removeItem(currentCacheKey);
-            }
-        }
-
-        fetchOrder(`${API_BASE}/?data=${encodeURIComponent(dataToken)}`, true, currentCacheKey);
-    } 
-    else if (payParam && !isNaN(parseFloat(payParam)) && parseFloat(payParam) > 0) {
-        currentStorage = sessionStorage;
-        const amountVal = parseFloat(payParam);
-        document.getElementById('input-custom-price').value = amountVal;
-
-        currentCacheKey = `solpay_custom_${amountVal}`;
-        const cachedPayStr = currentStorage.getItem(currentCacheKey);
-
-        if (cachedPayStr) {
-            try {
-                const cachedData = JSON.parse(cachedPayStr);
-                if (parseFloat(cachedData.pay_amount) === amountVal) {
-                    renderOrder(cachedData, false);
+                if (cachedData && cachedData.order_id) {
+                    // 有缓存时先请求一次 check，确认有效才显示，失效则拉取新订单
+                    validateAndRenderCache(cachedData, fetchUrl, true, currentCacheKey);
                     return;
                 }
             } catch (e) {
@@ -376,7 +400,13 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        fetchOrder(`${API_BASE}/?price=${encodeURIComponent(amountVal)}`, false, currentCacheKey);
+        fetchOrder(fetchUrl, true, currentCacheKey);
+    } 
+    else if (payParam && !isNaN(parseFloat(payParam)) && parseFloat(payParam) > 0) {
+        // 自定义金额模式：不使用持久缓存，直接发起请求获取新订单
+        const amountVal = parseFloat(payParam);
+        document.getElementById('input-custom-price').value = amountVal;
+        fetchOrder(`${API_BASE}/?price=${encodeURIComponent(amountVal)}`, false, null);
     } 
     else {
         switchToCustomMode();
